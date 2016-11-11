@@ -178,7 +178,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(mClusterManager);
 
         mMap.setOnMyLocationButtonClickListener(this);
-        
+
         enableMyLocation();
         fetchAllPlacemarks();
     }

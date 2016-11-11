@@ -17,7 +17,7 @@ public class FirstTimePlayerDialogFragment extends DialogFragment {
         View dialogView = inflater.inflate(R.layout.new_player_dialog, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("How to play")
+        builder.setMessage("Welcome to Grabble. Enjoy!")
                 .setView(dialogView)
                 .setPositiveButton("OK", new OnClickListener() {
                     @Override

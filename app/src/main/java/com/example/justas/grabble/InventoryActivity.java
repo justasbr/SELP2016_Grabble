@@ -25,7 +25,10 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
 
         setContentView(R.layout.activity_inventory);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
 
         initFragments();
 
