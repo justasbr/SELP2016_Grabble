@@ -2,7 +2,7 @@ package com.example.justas.grabble;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +24,7 @@ import java.util.List;
 public class ScoreFragment extends Fragment {
 
     // TODO: Customize parameters
-    private int mColumnCount = 2;
+    private int mColumnCount = 1;
 
     private OnListFragmentInteractionListener mListener;
 

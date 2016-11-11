@@ -49,11 +49,16 @@ import com.google.maps.android.ui.IconGenerator;
 
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ServiceConfigurationError;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, LocationListener, ConnectionCallbacks, OnConnectionFailedListener {
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
@@ -90,6 +95,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         FloatingActionButton inventoryFab = (FloatingActionButton) findViewById(R.id.inventory_button);
         FloatingActionButton leaderboardFab = (FloatingActionButton) findViewById(R.id.leaderboard_button);
+        FloatingActionButton settingsFab = (FloatingActionButton) findViewById(R.id.settings_button);
 
         inventoryFab.setOnClickListener(new View.OnClickListener() {
             @Override
