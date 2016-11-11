@@ -123,7 +123,6 @@
     <string name="leaderboard_toolbar">Leaderboard</string>
     <string name="generate_username">Get a random username</string>
     <string name="or">Or</string>
-    <string name="title_activity_settings_two">SettingsTwo</string>
     <string name="battery_saver_mode">Battery-saver Mode</string>
     <string name="show_closest_letters">Show only closest letters on the map</string>
     <string name="show_closest_letters_summary">This may improve application speed.</string>
@@ -136,4 +135,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_player_inventory_summary">See what letters you have and submit words. Review past words and stats!</string>
+    <string name="new_player_leaderboard_summary">Daily and all-time leaderboards!</string>
+    <string name="new_player_settings_summary">Running slow? Tweak settings.</string>
 </resources>
