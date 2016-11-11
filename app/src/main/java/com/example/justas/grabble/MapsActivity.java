@@ -111,7 +111,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        settingsFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            }
+        });
+
+        Utility.showFirstTimePlayerAlert(MapsActivity.this);
+
         buildGoogleApiClient();
+        fetchAllPlacemarks();
+    }
+
+    private void fetchAllPlacemarks() {
+        try {
+            ServerService.getAllPlacemarks(new Callback<List<MarkerItem>>() {
+                @Override
+                public void onResponse(Call<List<MarkerItem>> call, Response<List<MarkerItem>> response) {
+                    List<MarkerItem> markerItems = response.body();
+                    if (markerItems != null) {
+                        mClusterManager.addItems(markerItems);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<MarkerItem>> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "We could not parse the markers", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "We could not parse the markers", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -212,18 +243,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        float zoomLevel = 15.0f;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, zoomLevel));
-        mCurrentLocation = location;
+        if (location != null) {
+            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            float zoomLevel = 15.0f;
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, zoomLevel));
+            mCurrentLocation = location;
 
-        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        updateUI();
+            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            updateUI();
+        }
     }
 
     private void updateUI() {
-        String updateText = String.valueOf(mCurrentLocation.getLatitude()) + " " + String.valueOf(mCurrentLocation.getLongitude());
-        Toast.makeText(this, updateText, Toast.LENGTH_LONG).show();
+        if (mCurrentLocation != null) {
+            String updateText = String.valueOf(mCurrentLocation.getLatitude()) + " " + String.valueOf(mCurrentLocation.getLongitude());
+            Toast.makeText(this, updateText, Toast.LENGTH_LONG).show();
+        }
 
         // mLatitudeTextView.setText(String.valueOf(mCurrentLocation.getLatitude()));
         // mLongitudeTextView.setText(String.valueOf(mCurrentLocation.getLongitude()));
