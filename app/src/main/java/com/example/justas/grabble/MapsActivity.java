@@ -144,7 +144,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         for (MarkerItem marker : markerItems) {
-            mClusterManager.addItem(marker);
+            //mClusterManager.addItem(marker);
         }
 
         double lat = 55.9543;
@@ -155,8 +155,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             double offset = i / 60d;
             lat = lat + offset;
             lng = lng + offset;
-            MarkerItem offsetItem = new MarkerItem("Z", lat, lng);
-            mClusterManager.addItem(offsetItem);
+            //MarkerItem offsetItem = new MarkerItem("Z", lat, lng);
+            //mClusterManager.addItem(offsetItem);
         }
     }
 
