@@ -121,7 +121,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Utility.showFirstTimePlayerAlert(MapsActivity.this);
 
         buildGoogleApiClient();
-        fetchAllPlacemarks();
     }
 
     private void fetchAllPlacemarks() {
@@ -166,41 +165,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    private void addItems() {
-        MarkerItem edinburgh_a = new MarkerItem("A", 55.9533, -3.1883);
-        MarkerItem edinburgh_b = new MarkerItem("B", 55.9523, -3.1873);
-        MarkerItem edinburgh_c = new MarkerItem("C", 55.9513, -3.1893);
-
-        MarkerItem[] markerItems = new MarkerItem[]{edinburgh_a, edinburgh_b, edinburgh_c};
-
-
-        for (MarkerItem marker : markerItems) {
-            //mClusterManager.addItem(marker);
-        }
-
-        double lat = 55.9543;
-        double lng = -3.1893;
-
-        // Add ten cluster items in close proximity, for purposes of this example.
-        for (int i = 0; i < 40; i++) {
-            double offset = i / 60d;
-            lat = lat + offset;
-            lng = lng + offset;
-            //MarkerItem offsetItem = new MarkerItem("Z", lat, lng);
-            //mClusterManager.addItem(offsetItem);
-        }
-    }
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -213,10 +177,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
 
-        addItems();
-
         mMap.setOnMyLocationButtonClickListener(this);
+        
         enableMyLocation();
+        fetchAllPlacemarks();
     }
 
     /**
