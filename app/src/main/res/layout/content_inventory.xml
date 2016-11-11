@@ -1,17 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.justas.grabble.InventoryActivity"
     tools:showIn="@layout/activity_inventory">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+        android:orientation="vertical">
 
-</android.support.v4.widget.NestedScrollView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/submit_word"
+                style="@style/Widget.AppCompat.EditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                android:ems="10"
+                android:fontFamily="sans-serif-smallcaps"
+                android:hint="@string/submit_word"
+                android:inputType="textCapCharacters|textPersonName"
+                android:maxLength="7"
+                android:selectAllOnFocus="false"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:textStyle="normal|bold" />
+
+            <!--<Button-->
+            <!--android:text="@string/submit_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="45dp"-->
+            <!--android:id="@+id/submit_word_button"-->
+            <!--android:textAlignment="center"-->
+            <!--android:layout_gravity="right|center_vertical"-->
+            <!--android:layout_marginRight="15dp" />-->
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/submit_word_button"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="15dp"
+                android:clickable="true"
+                app:elevation="10dp"
+                app:srcCompat="@drawable/ic_action_done" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/suggest_word_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:text="@string/get_suggestion" />
+
+            <Button
+                android:id="@+id/inventory_fragment_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="@string/history_stats" />
+        </LinearLayout>
+
+
+        <fragment
+            android:id="@+id/inventory_fragment_current_inventory"
+            class="com.example.justas.grabble.CurrentInventoryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/text_margin"
+            android:layout_weight="1" />
+
+        <fragment
+            android:id="@+id/inventory_fragment_stats"
+            class="com.example.justas.grabble.HistoryStatsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/text_margin"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

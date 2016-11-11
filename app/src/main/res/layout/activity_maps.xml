@@ -6,28 +6,40 @@
     tools:context=".MapsActivity">
 
     <android.support.design.widget.FloatingActionButton
-        android:clickable="true"
-        app:srcCompat="@drawable/trophy_color"
-        android:id="@+id/leaderboard_button"
-        android:layout_gravity="bottom|right"
-        app:rippleColor="@android:color/transparent"
-        app:backgroundTint="@android:color/holo_blue_dark"
+        android:id="@+id/settings_button"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="8dp"
+        android:clickable="true"
+        app:backgroundTint="@android:color/holo_blue_dark"
         app:elevation="16dp"
-        android:layout_margin="8dp" />
+        app:rippleColor="@android:color/transparent"
+        app:srcCompat="@drawable/settings_bw" />
 
     <android.support.design.widget.FloatingActionButton
-        android:clickable="true"
-        app:srcCompat="@drawable/rucksack_color"
-        android:id="@+id/inventory_button"
-        app:backgroundTint="@android:color/holo_blue_dark"
-        android:layout_gravity="bottom|center_horizontal"
-        app:rippleColor="@android:color/transparent"
+        android:id="@+id/leaderboard_button"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="8dp"
+        android:clickable="true"
+        app:backgroundTint="@android:color/holo_blue_dark"
         app:elevation="16dp"
-        android:layout_margin="8dp" />
+        app:rippleColor="@android:color/transparent"
+        app:srcCompat="@drawable/trophy_color" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/inventory_button"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_margin="8dp"
+        android:clickable="true"
+        app:backgroundTint="@android:color/holo_blue_dark"
+        app:elevation="16dp"
+        app:rippleColor="@android:color/transparent"
+        app:srcCompat="@drawable/rucksack_color" />
 
     <fragment
         android:id="@+id/map"
