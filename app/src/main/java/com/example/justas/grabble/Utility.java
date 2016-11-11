@@ -35,4 +35,12 @@ class Utility {
         alert.setCancelable(false);
         alert.show();
     }
+
+    static void showFirstTimePlayerAlert(final Context context) {
+        FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
+
+        FirstTimePlayerDialogFragment alert = new FirstTimePlayerDialogFragment();
+        alert.setCancelable(false);
+        alert.show(fragmentManager, "dialog");
+    }
 }
