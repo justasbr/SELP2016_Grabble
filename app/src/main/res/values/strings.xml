@@ -138,4 +138,5 @@
     <string name="new_player_inventory_summary">See what letters you have and submit words. Review past words and stats!</string>
     <string name="new_player_leaderboard_summary">Daily and all-time leaderboards!</string>
     <string name="new_player_settings_summary">Running slow? Tweak settings.</string>
+    <string name="inventory_file">INVENTORY_FILE</string>
 </resources>

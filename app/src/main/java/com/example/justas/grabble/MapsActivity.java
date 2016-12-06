@@ -1,7 +1,9 @@
 package com.example.justas.grabble;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -82,6 +84,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ClusterManager<MarkerItem> mClusterManager;
     private Location mCurrentLocation;
     private List<MarkerItem> mMarkerItems;
+    private SharedPreferences sharedPrefs;
 
     protected LocationRequest mLocationRequest;
     protected GoogleApiClient mGoogleApiClient;
@@ -125,6 +128,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Utility.showFirstTimePlayerAlert(MapsActivity.this);
 
         buildGoogleApiClient();
+
+        Context context = getApplicationContext();
+        sharedPrefs = context.getSharedPreferences(
+                getString(R.string.inventory_file), Context.MODE_PRIVATE);
     }
 
     private void fetchAllPlacemarks() {
@@ -234,6 +241,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMarkerItems.remove(itemToRemove);
                     mClusterManager.removeItem(itemToRemove);
                     reclusteringNeeded = true;
+                    incrementLetterCount(itemToRemove.getLabel());
                 }
 
                 if (reclusteringNeeded) {
@@ -241,6 +249,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         }
+    }
+
+    private void incrementLetterCount(String letterLabel) {
+        int oldValue = sharedPrefs.getInt(letterLabel, 0);
+        int updatedValue = oldValue + 1;
+
+//        String letterCollectedMessage = letterLabel + " " + String.valueOf(updatedValue);
+//        Log.d("LETTER_COLLECTED", letterCollectedMessage);
+
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putInt(letterLabel, updatedValue).apply();
     }
 
     private void updateUI() {
