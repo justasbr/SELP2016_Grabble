@@ -1,5 +1,7 @@
 package com.example.justas.grabble;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
@@ -16,8 +18,19 @@ public class MarkerItem implements ClusterItem {
 
     @Override
     public LatLng getPosition() {
-        if (lat != null && lng != null){
+        if (lat != null && lng != null) {
             return new LatLng(lat, lng);
+        } else {
+            return null;
+        }
+    }
+
+    public Location getLocation() {
+        if (lat != null && lng != null) {
+            Location location = new Location("");
+            location.setLatitude(lat);
+            location.setLongitude(lng);
+            return location;
         } else {
             return null;
         }

@@ -40,6 +40,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -61,7 +62,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, LocationListener, ConnectionCallbacks, OnConnectionFailedListener {
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
@@ -71,6 +72,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
+    private static final double PICKUP_DISTANCE_IN_METERS = 10;
     private boolean mPermissionDenied = false;
     protected static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -78,6 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mLastUpdateTime;
     private ClusterManager<MarkerItem> mClusterManager;
     private Location mCurrentLocation;
+    private List<MarkerItem> mMarkerItems;
 
     protected LocationRequest mLocationRequest;
     protected GoogleApiClient mGoogleApiClient;
@@ -128,9 +132,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             ServerService.getAllPlacemarks(new Callback<List<MarkerItem>>() {
                 @Override
                 public void onResponse(Call<List<MarkerItem>> call, Response<List<MarkerItem>> response) {
-                    List<MarkerItem> markerItems = response.body();
-                    if (markerItems != null) {
-                        mClusterManager.addItems(markerItems);
+                    mMarkerItems = response.body();
+                    if (mMarkerItems != null) {
+                        mClusterManager.addItems(mMarkerItems);
+                        mClusterManager.cluster();
                     }
                 }
 
@@ -209,12 +214,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(Location location) {
         if (location != null) {
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            float zoomLevel = 15.0f;
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, zoomLevel));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
             mCurrentLocation = location;
 
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             updateUI();
+
+            if (mMarkerItems != null) {
+                ArrayList<MarkerItem> itemsToRemove = new ArrayList<>();
+                for (MarkerItem markerItem : mMarkerItems) {
+                    if (location.distanceTo(markerItem.getLocation()) <= PICKUP_DISTANCE_IN_METERS) {
+                        itemsToRemove.add(markerItem);
+                    }
+                }
+
+                boolean reclusteringNeeded = false;
+
+                for (MarkerItem itemToRemove : itemsToRemove) {
+                    mMarkerItems.remove(itemToRemove);
+                    mClusterManager.removeItem(itemToRemove);
+                    reclusteringNeeded = true;
+                }
+
+                if (reclusteringNeeded) {
+                    mClusterManager.cluster();
+                }
+            }
         }
     }
 
@@ -301,9 +326,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onBeforeClusterItemRendered(MarkerItem markerItem, MarkerOptions markerOptions) {
             mIconGenerator.setStyle(IconGenerator.STYLE_PURPLE); //doRandom
-
             Bitmap icon = mIconGenerator.makeIcon(markerItem.getLabel());
-
             markerOptions.anchor(0.5f, 0.5f).icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
