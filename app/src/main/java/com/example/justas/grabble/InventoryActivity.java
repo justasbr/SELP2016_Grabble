@@ -1,25 +1,33 @@
 package com.example.justas.grabble;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class InventoryActivity extends AppCompatActivity implements HistoryStatsFragment.OnFragmentInteractionListener,
         CurrentInventoryFragment.OnFragmentInteractionListener {
     private boolean mShowingInventory;
     private FragmentManager mFragmentManager;
+    private SharedPreferences sharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sharedPrefs = getSharedPreferences(
+                getString(R.string.inventory_file), Context.MODE_PRIVATE);
 
         mFragmentManager = getFragmentManager();
 
@@ -31,6 +39,7 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
         }
 
         initFragments();
+        updateInventory();
 
         final Button inventory_fragment_button = (Button) findViewById(R.id.inventory_fragment_button);
 
@@ -60,6 +69,33 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
                 transaction.commit();
             }
         });
+    }
+
+    private void updateInventory() {
+        for (char c = 'A'; c <= 'Z'; c++) {
+            String label = String.valueOf(c);
+            int count = sharedPrefs.getInt(label, 0);
+
+            String textViewId = "text_inventory_" + label;
+            int resourceId = getResources().getIdentifier(textViewId, "id", getPackageName());
+            TextView textView = (TextView) findViewById(resourceId);
+
+            if (textView != null) {
+                String inventoryText = label + ": " + String.valueOf(count);
+                textView.setText(inventoryText);
+                setFontStyle(textView, count);
+            }
+        }
+    }
+
+    private void setFontStyle(TextView textView, int count) {
+        if (count > 0) {
+            textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+            textView.setTextColor(Color.BLACK);
+        } else {
+            textView.setTypeface(textView.getTypeface(), Typeface.NORMAL);
+            textView.setTextColor(Color.DKGRAY);
+        }
     }
 
     private void initFragments() {

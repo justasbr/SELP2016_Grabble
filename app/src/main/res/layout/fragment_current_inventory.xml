@@ -21,73 +21,73 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="A: 0"
+                android:id="@+id/text_inventory_A"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="B: 1"
+                android:id="@+id/text_inventory_B"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="C: 2"
+                android:id="@+id/text_inventory_C"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="D: 4"
+                android:id="@+id/text_inventory_D"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="E: 4"
+                android:id="@+id/text_inventory_E"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="F: 31"
+                android:id="@+id/text_inventory_F"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="G: 9"
+                android:id="@+id/text_inventory_G"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="H: 6"
+                android:id="@+id/text_inventory_H"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="I: 3"
+                android:id="@+id/text_inventory_I"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -100,76 +100,76 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="J: 0"
+                android:id="@+id/text_inventory_J"
                 android:textAlignment="center"
 
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="K: 10"
+                android:id="@+id/text_inventory_K"
                 android:textAlignment="center"
 
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="L: 5"
+                android:id="@+id/text_inventory_L"
                 android:textAlignment="center"
 
-                android:textSize="18dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:ems="10"
-                android:text="M: 15"
-                android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="N: 9"
+                android:id="@+id/text_inventory_M"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="O: 31"
+                android:id="@+id/text_inventory_N"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="P: 31"
+                android:id="@+id/text_inventory_O"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="Q: 28"
+                android:id="@+id/text_inventory_P"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="R: 7"
+                android:id="@+id/text_inventory_Q"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:ems="10"
+                android:id="@+id/text_inventory_R"
+                android:textAlignment="center"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -182,66 +182,66 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="S: 14"
+                android:id="@+id/text_inventory_S"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="T: 3"
+                android:id="@+id/text_inventory_T"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="U: 8"
+                android:id="@+id/text_inventory_U"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="V: 6"
+                android:id="@+id/text_inventory_V"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="W: 2"
+                android:id="@+id/text_inventory_W"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="X: 0"
+                android:id="@+id/text_inventory_X"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="Y: 1"
+                android:id="@+id/text_inventory_Y"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:text="Z: 14"
+                android:id="@+id/text_inventory_Z"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
