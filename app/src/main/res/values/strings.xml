@@ -139,4 +139,8 @@
     <string name="new_player_leaderboard_summary">Daily and all-time leaderboards!</string>
     <string name="new_player_settings_summary">Running slow? Tweak settings.</string>
     <string name="inventory_file">INVENTORY_FILE</string>
+    <string name="warning_submitted_word_length">Word must have 7 letters</string>
+    <string name="warning_submitted_word_not_in_dict">This word is not in Grabble dictionary</string>
+    <string name="warning_submitted_word_not_enough_letters">You do not possess enough letters for this word</string>
+    <string name="word_submitted_congrats">Well done! You successfully submitted: </string>
 </resources>

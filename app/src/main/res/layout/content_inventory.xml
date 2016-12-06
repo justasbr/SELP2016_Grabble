@@ -25,7 +25,7 @@
 
 
             <EditText
-                android:id="@+id/submit_word"
+                android:id="@+id/submit_word_text"
                 style="@style/Widget.AppCompat.EditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
