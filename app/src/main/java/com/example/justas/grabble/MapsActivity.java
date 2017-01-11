@@ -64,7 +64,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, LocationListener, ConnectionCallbacks, OnConnectionFailedListener {
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
