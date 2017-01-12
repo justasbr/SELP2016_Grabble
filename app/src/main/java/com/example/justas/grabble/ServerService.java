@@ -13,7 +13,7 @@ import retrofit2.Retrofit;
 import retrofit2.http.GET;
 
 public final class ServerService {
-    public static final String API_URL = "https://grabble-justasb.herokuapp.com/";
+    public static final String API_URL = "https://grabble-backend-justasb.herokuapp.com/";
 
     public interface Placemarks {
         @GET("/placemarks")
