@@ -4,12 +4,12 @@
 
     <SwitchPreference
         android:defaultValue="false"
-        android:key="@string/battery_saver_summary"
+        android:key="@string/pref_battery_saver"
         android:summary="@string/battery_saver_summary"
         android:title="@string/battery_saver_mode" />
     <SwitchPreference
         android:defaultValue="false"
-        android:key="@string/show_closest_letters"
+        android:key="@string/pref_only_show_closest"
         android:summary="@string/show_closest_letters_summary"
         android:title="@string/show_closest_letters" />
 </PreferenceScreen>

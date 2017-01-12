@@ -126,12 +126,10 @@
     <string name="battery_saver_mode">Battery-saver Mode</string>
     <string name="show_closest_letters">Show only closest letters on the map</string>
     <string name="show_closest_letters_summary">This may improve application speed.</string>
-    <string name="see_other_users_real_time">See other users in real time</string>
-    <string name="show_other_users_summary">Other users playing Grabble will be shown on the map in real time. Other Grabble players will also be able to see you.</string>
     <string name="battery_saver_summary">This option is automatically switched on when phone is low-battery.</string>
     <string name="suggest_word">Suggest Word</string>
     <string name="history_stats"><![CDATA[History & Stats]]></string>
-    <string name="get_suggestion">Get sugesstion (3)</string>
+    <string name="get_suggestion">Get suggestion (3)</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -143,4 +141,6 @@
     <string name="warning_submitted_word_not_in_dict">This word is not in Grabble dictionary</string>
     <string name="warning_submitted_word_not_enough_letters">You do not possess enough letters for this word</string>
     <string name="word_submitted_congrats">Well done! You successfully submitted: </string>
+    <string name="pref_only_show_closest">Preference Only Show Closest</string>
+    <string name="pref_battery_saver">Preference Battery Saver</string>
 </resources>

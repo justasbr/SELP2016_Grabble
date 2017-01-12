@@ -1,69 +1,54 @@
 package com.example.justas.grabble;
 
+import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.location.Location;
-import android.renderscript.ScriptGroup;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
-import android.Manifest;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.games.leaderboard.Leaderboard;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-
-import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.ServiceConfigurationError;
+import java.util.PriorityQueue;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, LocationListener, ConnectionCallbacks, OnConnectionFailedListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, LocationListener,
+        ConnectionCallbacks, OnConnectionFailedListener, SharedPreferences.OnSharedPreferenceChangeListener {
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
 
     /**
@@ -76,6 +61,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private static final double PICKUP_DISTANCE_IN_METERS = 10;
+
+    private static final int MARKERS_TO_SHOW = 100;
+
     private boolean mPermissionDenied = false;
     protected static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -85,6 +73,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Location mCurrentLocation;
     private List<MarkerItem> mMarkerItems;
     private SharedPreferences sharedPrefs;
+
+    private SharedPreferences applicationPrefs;
+    private boolean mBatterySaverMode;
+    private boolean mShowOnlyClosest;
+    private boolean forceMapRecluster = true;
 
     protected LocationRequest mLocationRequest;
     protected GoogleApiClient mGoogleApiClient;
@@ -132,6 +125,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Context context = getApplicationContext();
         sharedPrefs = context.getSharedPreferences(
                 getString(R.string.inventory_file), Context.MODE_PRIVATE);
+
+        initApplicationPrefs();
+    }
+
+    private void initApplicationPrefs() {
+        applicationPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        applicationPrefs.registerOnSharedPreferenceChangeListener(this);
+        updateApplicationPrefs();
+    }
+
+    private void updateApplicationPrefs() {
+        mBatterySaverMode = applicationPrefs.getBoolean(getString(R.string.pref_battery_saver), false);
+        mShowOnlyClosest = applicationPrefs.getBoolean(getString(R.string.pref_only_show_closest), false);
     }
 
     private void fetchAllPlacemarks() {
@@ -219,37 +225,74 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location != null) {
-            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-            mCurrentLocation = location;
+        if (location == null) {
+            return;
+        }
 
-            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            updateUI();
+        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+        mCurrentLocation = location;
 
-            if (mMarkerItems != null) {
-                ArrayList<MarkerItem> itemsToRemove = new ArrayList<>();
-                for (MarkerItem markerItem : mMarkerItems) {
-                    if (location.distanceTo(markerItem.getLocation()) <= PICKUP_DISTANCE_IN_METERS) {
-                        itemsToRemove.add(markerItem);
+        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        updateUI();
+
+
+        if (mMarkerItems != null) {
+            ArrayList<MarkerItem> pickedUpItems = new ArrayList<>();
+            for (MarkerItem markerItem : mMarkerItems) {
+                if (location.distanceTo(markerItem.getLocation()) <= PICKUP_DISTANCE_IN_METERS) {
+                    pickedUpItems.add(markerItem);
+                }
+            }
+
+            boolean itemsCollected = false;
+
+            for (MarkerItem pickedUpItem : pickedUpItems) {
+                mMarkerItems.remove(pickedUpItem);
+                mClusterManager.removeItem(pickedUpItem);
+                incrementLetterCount(pickedUpItem.getLabel());
+                itemsCollected = true;
+            }
+
+            boolean markerResetNeeded = forceMapRecluster || mShowOnlyClosest;
+            boolean reclusteringNeeded = markerResetNeeded || itemsCollected;
+            forceMapRecluster = false;
+
+            if (markerResetNeeded) {
+                mClusterManager.clearItems();
+                if (mShowOnlyClosest) {
+                    PriorityQueue<MarkerItem> closestItems = new PriorityQueue<>(MARKERS_TO_SHOW, distanceToUserLocation);
+                    for (MarkerItem markerItem : mMarkerItems) {
+                        closestItems.add(markerItem);
+                        //Trim heap to contain MARKERS_TO_SHOW closest markers
+                        if (closestItems.size() > MARKERS_TO_SHOW) {
+                            closestItems.poll();
+                        }
                     }
+                    mClusterManager.addItems(closestItems);
+                } else {
+                    mClusterManager.addItems(mMarkerItems);
                 }
-
-                boolean reclusteringNeeded = false;
-
-                for (MarkerItem itemToRemove : itemsToRemove) {
-                    mMarkerItems.remove(itemToRemove);
-                    mClusterManager.removeItem(itemToRemove);
-                    reclusteringNeeded = true;
-                    incrementLetterCount(itemToRemove.getLabel());
-                }
-
-                if (reclusteringNeeded) {
-                    mClusterManager.cluster();
-                }
+            }
+            if (reclusteringNeeded) {
+                mClusterManager.cluster();
             }
         }
     }
+
+    private Comparator<MarkerItem> distanceToUserLocation = new Comparator<MarkerItem>() {
+        @Override
+        public int compare(MarkerItem itemA, MarkerItem itemB) {
+            double distA = mCurrentLocation.distanceTo(itemA.getLocation());
+            double distB = mCurrentLocation.distanceTo(itemB.getLocation());
+            if (distB > distA) {
+                return 1;
+            } else if (distA > distB) {
+                return -1;
+            }
+            return 0;
+        }
+    };
 
     private void incrementLetterCount(String letterLabel) {
         int oldValue = sharedPrefs.getInt(letterLabel, 0);
@@ -335,6 +378,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String pref) {
+        updateApplicationPrefs();
+
+        if (pref.equals(getString(R.string.pref_only_show_closest))) {
+            forceMapRecluster = true;
+        }
+    }
+
     private class MarkerItemRenderer extends DefaultClusterRenderer<MarkerItem> {
         private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
 
@@ -344,7 +396,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected void onBeforeClusterItemRendered(MarkerItem markerItem, MarkerOptions markerOptions) {
-            mIconGenerator.setStyle(IconGenerator.STYLE_PURPLE); //doRandom
+            //TODO Randomize color
+            mIconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
+
             Bitmap icon = mIconGenerator.makeIcon(markerItem.getLabel());
             markerOptions.anchor(0.5f, 0.5f).icon(BitmapDescriptorFactory.fromBitmap(icon));
         }

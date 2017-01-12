@@ -89,7 +89,7 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
                 EditText wordField = (EditText) findViewById(R.id.submit_word_text);
                 String submission = wordField.getText().toString();
 
-                if (isWordValid(submission)) {
+                if (isValidWord(submission)) {
                     submitWord(submission);
                     wordField.setText("");
                 }
@@ -98,7 +98,7 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
     }
 
 
-    private boolean isWordValid(String word) {
+    private boolean isValidWord(String word) {
         if (word.length() != 7) {
             showShortToast(getString(R.string.warning_submitted_word_length));
             return false;
