@@ -2,6 +2,8 @@ package com.example.justas.grabble;
 
 import java.util.HashMap;
 
+//TODO think about architecture of this class
+
 public class WordScorer {
     private HashMap<Character, Integer> charScores;
 

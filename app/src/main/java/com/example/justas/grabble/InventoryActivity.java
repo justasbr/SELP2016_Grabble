@@ -3,8 +3,10 @@ package com.example.justas.grabble;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -19,20 +21,33 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.justas.grabble.data.SubmittedWordsContract.WordEntry;
+import com.example.justas.grabble.data.SubmittedWordsOpenHelper;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.justas.grabble.Utility.getDateTime;
+
 public class InventoryActivity extends AppCompatActivity implements HistoryStatsFragment.OnFragmentInteractionListener,
         CurrentInventoryFragment.OnFragmentInteractionListener {
+
     private boolean mShowingInventory;
     private FragmentManager mFragmentManager;
     private SharedPreferences sharedPrefs;
+
+    private SubmittedWordsOpenHelper mDbHelper;
+    private SQLiteDatabase db;
 
     private Dictionary dictionary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        mDbHelper = new SubmittedWordsOpenHelper(getApplicationContext());
+        db = mDbHelper.getWritableDatabase();
 
         sharedPrefs = getSharedPreferences(
                 getString(R.string.inventory_file), Context.MODE_PRIVATE);
@@ -158,10 +173,26 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
             editor.putInt(letterLabel, updatedCount);
         }
 
-        showLongToast(getString(R.string.word_submitted_congrats) + word);
-
         editor.commit();
         updateInventory();
+        storeWordInDb(word);
+
+        showLongToast(getString(R.string.word_submitted_congrats) + word);
+    }
+
+    private void storeWordInDb(String word) {
+
+        WordScorer wordScorer = new WordScorer();
+        ContentValues values = new ContentValues();
+        int score = wordScorer.wordScoreOf(word);
+
+        values.put(WordEntry.COLUMN_NAME_WORD, word);
+        values.put(WordEntry.COLUMN_NAME_SCORE, score);
+        values.put(WordEntry.COLUMN_NAME_DATETIME, getDateTime());
+
+        db.insert(WordEntry.TABLE_NAME, null, values);
+        Log.d("WORD SUBMITTED SQLite", word + " " + score);
+
     }
 
     private void updateInventory() {
@@ -221,5 +252,11 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
     public void onBackPressed() {
         Log.d("BACK CLICKED", "");
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mDbHelper.close();
+        super.onDestroy();
     }
 }

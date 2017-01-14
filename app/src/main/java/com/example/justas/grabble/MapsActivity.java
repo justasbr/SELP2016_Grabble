@@ -1,10 +1,12 @@
 package com.example.justas.grabble;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.justas.grabble.data.CollectedMarkersContract.MarkerEntry;
+import com.example.justas.grabble.data.CollectedMarkersOpenHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -46,6 +50,8 @@ import java.util.PriorityQueue;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.justas.grabble.Utility.getDateTime;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, LocationListener,
         ConnectionCallbacks, OnConnectionFailedListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -79,6 +85,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean mShowOnlyClosest;
     private boolean forceMapRecluster = true;
 
+    private CollectedMarkersOpenHelper mDbHelper;
+    private SQLiteDatabase db;
+
     protected LocationRequest mLocationRequest;
     protected GoogleApiClient mGoogleApiClient;
 
@@ -87,6 +96,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mDbHelper = new CollectedMarkersOpenHelper(getApplicationContext());
+        db = mDbHelper.getWritableDatabase();
+
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -250,6 +263,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (MarkerItem pickedUpItem : pickedUpItems) {
                 mMarkerItems.remove(pickedUpItem);
                 mClusterManager.removeItem(pickedUpItem);
+                storeMarkerInDb(pickedUpItem);
                 incrementLetterCount(pickedUpItem.getLabel());
                 itemsCollected = true;
             }
@@ -278,6 +292,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mClusterManager.cluster();
             }
         }
+    }
+
+    private void storeMarkerInDb(MarkerItem marker) {
+        String letter = marker.getLabel();
+        String lat = String.valueOf(marker.getPosition().latitude);
+        String lng = String.valueOf(marker.getPosition().longitude);
+
+        ContentValues values = new ContentValues();
+
+        values.put(MarkerEntry.COLUMN_NAME_LETTER, letter);
+        values.put(MarkerEntry.COLUMN_NAME_LAT, lat);
+        values.put(MarkerEntry.COLUMN_NAME_LNG, lng);
+        values.put(MarkerEntry.COLUMN_NAME_DATETIME, getDateTime());
+
+        Log.d("MARKER COLLECTED SQLite", letter + " " + String.valueOf(lat) + " " + String.valueOf(lng) + " " + getDateTime());
+        db.insert(MarkerEntry.TABLE_NAME, null, values);
     }
 
     private Comparator<MarkerItem> distanceToUserLocation = new Comparator<MarkerItem>() {

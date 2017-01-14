@@ -11,7 +11,18 @@ import android.app.FragmentManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 class Utility {
+    static String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
     static void confirmExitDialog(final Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
