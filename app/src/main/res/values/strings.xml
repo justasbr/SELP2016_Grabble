@@ -143,4 +143,5 @@
     <string name="word_submitted_congrats">Well done! You successfully submitted: </string>
     <string name="pref_only_show_closest">Preference Only Show Closest</string>
     <string name="pref_battery_saver">Preference Battery Saver</string>
+    <string name="low_battery_warning">LOW BATTERY: Battery saver mode turned on</string>
 </resources>
