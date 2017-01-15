@@ -41,10 +41,13 @@ import com.google.maps.android.ui.IconGenerator;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.PriorityQueue;
 
 import retrofit2.Call;
@@ -56,13 +59,12 @@ import static com.example.justas.grabble.Utility.getDateTime;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, LocationListener,
         ConnectionCallbacks, OnConnectionFailedListener, SharedPreferences.OnSharedPreferenceChangeListener {
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS_BATTERY_SAVER = 6000;
 
-    /**
-     * The fastest rate for active location updates. Exact. Updates will never be more frequent
-     * than this value.
-     */
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS_BATTERY_SAVER =
+            UPDATE_INTERVAL_IN_MILLISECONDS_BATTERY_SAVER / 2;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -96,6 +98,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initApplicationPrefs();
 
         mDbHelper = new CollectedMarkersOpenHelper(getApplicationContext());
         db = mDbHelper.getWritableDatabase();
@@ -106,6 +109,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        setUpButtons();
+
+        Utility.showFirstTimePlayerAlert(MapsActivity.this);
+
+        buildGoogleApiClient();
+
+        Context context = getApplicationContext();
+        sharedPrefs = context.getSharedPreferences(
+                getString(R.string.inventory_file), Context.MODE_PRIVATE);
+    }
+
+    private void setUpButtons() {
         FloatingActionButton inventoryFab = (FloatingActionButton) findViewById(R.id.inventory_button);
         FloatingActionButton leaderboardFab = (FloatingActionButton) findViewById(R.id.leaderboard_button);
         FloatingActionButton settingsFab = (FloatingActionButton) findViewById(R.id.settings_button);
@@ -130,16 +145,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             }
         });
-
-        Utility.showFirstTimePlayerAlert(MapsActivity.this);
-
-        buildGoogleApiClient();
-
-        Context context = getApplicationContext();
-        sharedPrefs = context.getSharedPreferences(
-                getString(R.string.inventory_file), Context.MODE_PRIVATE);
-
-        initApplicationPrefs();
     }
 
     private void initApplicationPrefs() {
@@ -191,9 +196,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (mBatterySaverMode) {
+            Log.d("BATTERY_SAVER", "ON");
+            mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS_BATTERY_SAVER);
+            mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS_BATTERY_SAVER);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        } else {
+            Log.d("BATTERY_SAVER", "OFF");
+            mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+            mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        }
     }
 
     @Override
@@ -242,6 +256,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault());
+
+        Log.d("BATTERY SAVER", sdf.format(cal.getTime()));
         LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
         mCurrentLocation = location;
@@ -337,7 +355,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void updateUI() {
         if (mCurrentLocation != null) {
-            String updateText = String.valueOf(mCurrentLocation.getLatitude()) + " " + String.valueOf(mCurrentLocation.getLongitude());
+            String updateText = String.valueOf(mCurrentLocation.getLatitude()) + " " +
+                    String.valueOf(mCurrentLocation.getLongitude());
             Toast.makeText(this, updateText, Toast.LENGTH_LONG).show();
         }
 
@@ -380,6 +399,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected void startLocationUpdates() {
         try {
+            Log.d("BATTERY SAVER", "START LOCATION UPDATES");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         } catch (SecurityException e) {
             Log.d(TAG, e.toString());
@@ -388,6 +408,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    protected void restartLocationUpdates() {
+        stopLocationUpdates();
+        startLocationUpdates();
     }
 
     @Override
@@ -415,6 +440,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (pref.equals(getString(R.string.pref_only_show_closest))) {
             forceMapRecluster = true;
         }
+
+        if (pref.equals(getString(R.string.pref_battery_saver))) {
+            createLocationRequest();
+            restartLocationUpdates();
+        }
+
     }
 
     private class MarkerItemRenderer extends DefaultClusterRenderer<MarkerItem> {
