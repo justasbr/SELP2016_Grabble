@@ -36,7 +36,35 @@ public class MarkerItem implements ClusterItem {
         }
     }
 
+    private boolean hasMissingInformation() {
+        return this.letter == null || this.lat == null || this.lng == null;
+    }
+
     public String getLabel() {
         return letter;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof MarkerItem) {
+            MarkerItem other = (MarkerItem) object;
+            if (this.hasMissingInformation() || other.hasMissingInformation()) {
+                return false;
+            }
+            return this.letter.equals(other.letter) && this.getPosition().equals(other.getPosition());
+        }
+        return super.equals(object);
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.hasMissingInformation()) {
+            return super.hashCode();
+        }
+
+        //Not the best hash function, but works well enough for our use case
+        return this.letter.hashCode() + this.lat.hashCode() + this.lng.hashCode();
+    }
+
+
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.PriorityQueue;
@@ -54,6 +56,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.justas.grabble.Utility.getDate;
 import static com.example.justas.grabble.Utility.getDateTime;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, LocationListener,
@@ -163,11 +166,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             ServerService.getAllPlacemarks(new Callback<List<MarkerItem>>() {
                 @Override
                 public void onResponse(Call<List<MarkerItem>> call, Response<List<MarkerItem>> response) {
-                    mMarkerItems = response.body();
-                    if (mMarkerItems != null) {
-                        mClusterManager.addItems(mMarkerItems);
-                        mClusterManager.cluster();
+                    if (response.body() == null) {
+                        return;
                     }
+
+                    List<MarkerItem> parsedItems = response.body();
+
+                    HashSet<MarkerItem> collectedMarkers = fetchCollectedMarkers();
+                    mMarkerItems = filterOut(parsedItems, collectedMarkers);
+
+                    Log.d("DONT SHOW COLLECTED", "SIZE1 " + String.valueOf(mMarkerItems.size()));
+                    Log.d("DONT SHOW COLLECTED", "SIZE2 " + collectedMarkers.size());
+
+                    mClusterManager.addItems(mMarkerItems);
+                    mClusterManager.cluster();
                 }
 
                 @Override
@@ -178,6 +190,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (IOException e) {
             Toast.makeText(getApplicationContext(), "We could not parse the markers", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private HashSet<MarkerItem> fetchCollectedMarkers() {
+        HashSet<MarkerItem> result = new HashSet<>();
+
+        String today = getDate();
+        String selectionToday = MarkerEntry.COLUMN_NAME_DATETIME + " >= \"" + today + "\"";
+
+        Cursor cursor = db.query(MarkerEntry.TABLE_NAME, null, selectionToday, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String letter = cursor.getString(cursor.getColumnIndex(MarkerEntry.COLUMN_NAME_LETTER));
+                Double lat = cursor.getDouble(cursor.getColumnIndex(MarkerEntry.COLUMN_NAME_LAT));
+                Double lng = cursor.getDouble(cursor.getColumnIndex(MarkerEntry.COLUMN_NAME_LNG));
+                result.add(new MarkerItem(letter, lat, lng));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return result;
+    }
+
+    private <T> List<T> filterOut(List<T> origList, HashSet<T> origSet) {
+        List<T> resultList = new ArrayList<>();
+
+        for (T origItem : origList) {
+            if (!origSet.contains(origItem)) {
+                resultList.add(origItem);
+            }
+        }
+
+        return resultList;
     }
 
     /**
@@ -355,9 +400,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void updateUI() {
         if (mCurrentLocation != null) {
-            String updateText = String.valueOf(mCurrentLocation.getLatitude()) + " " +
-                    String.valueOf(mCurrentLocation.getLongitude());
-            Toast.makeText(this, updateText, Toast.LENGTH_LONG).show();
+//            String updateText = String.valueOf(mCurrentLocation.getLatitude()) + " " +
+//                    String.valueOf(mCurrentLocation.getLongitude());
+//            Toast.makeText(this, updateText, Toast.LENGTH_LONG).show();
         }
 
         // mLatitudeTextView.setText(String.valueOf(mCurrentLocation.getLatitude()));

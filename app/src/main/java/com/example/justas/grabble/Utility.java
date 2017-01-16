@@ -23,6 +23,13 @@ class Utility {
         return dateFormat.format(date);
     }
 
+    static String getDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
     static void confirmExitDialog(final Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
