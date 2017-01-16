@@ -129,7 +129,7 @@
     <string name="battery_saver_summary">This option is automatically switched on when phone is low-battery.</string>
     <string name="suggest_word">Suggest Word</string>
     <string name="history_stats"><![CDATA[History & Stats]]></string>
-    <string name="get_suggestion">Get suggestion (3)</string>
+    <string name="get_suggestion">Get suggestion</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -144,4 +144,5 @@
     <string name="pref_only_show_closest">Preference Only Show Closest</string>
     <string name="pref_battery_saver">Preference Battery Saver</string>
     <string name="low_battery_warning">LOW BATTERY: Battery saver mode turned on</string>
+    <string name="title_activity_history_stats"><![CDATA[History & Statistics]]></string>
 </resources>

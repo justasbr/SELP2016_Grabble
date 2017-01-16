@@ -126,6 +126,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setUpButtons() {
         FloatingActionButton inventoryFab = (FloatingActionButton) findViewById(R.id.inventory_button);
         FloatingActionButton leaderboardFab = (FloatingActionButton) findViewById(R.id.leaderboard_button);
+        FloatingActionButton statsFab = (FloatingActionButton) findViewById(R.id.stats_button);
         FloatingActionButton settingsFab = (FloatingActionButton) findViewById(R.id.settings_button);
 
         inventoryFab.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +140,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), LeaderboardActivity.class));
+            }
+        });
+
+        statsFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), HistoryStatsActivity.class));
             }
         });
 
@@ -267,6 +275,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
 
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setOnMyLocationButtonClickListener(this);
 
         enableMyLocation();

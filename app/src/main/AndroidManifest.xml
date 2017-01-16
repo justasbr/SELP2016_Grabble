@@ -54,6 +54,11 @@
             android:label="@string/title_activity_leaderboard"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".HistoryStatsActivity"
+            android:label="@string/title_activity_history_stats"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme" />
 
         <receiver android:name=".BatteryLevelReceiver">
             <intent-filter>

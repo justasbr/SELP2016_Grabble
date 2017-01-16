@@ -1,8 +1,5 @@
 package com.example.justas.grabble;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,11 +25,8 @@ import java.util.Map;
 
 import static com.example.justas.grabble.Utility.getDateTime;
 
-public class InventoryActivity extends AppCompatActivity implements HistoryStatsFragment.OnFragmentInteractionListener,
-        CurrentInventoryFragment.OnFragmentInteractionListener {
+public class InventoryActivity extends AppCompatActivity implements CurrentInventoryFragment.OnFragmentInteractionListener {
 
-    private boolean mShowingInventory;
-    private FragmentManager mFragmentManager;
     private SharedPreferences sharedPrefs;
 
     private SubmittedWordsOpenHelper mDbHelper;
@@ -52,8 +45,6 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
         sharedPrefs = getSharedPreferences(
                 getString(R.string.inventory_file), Context.MODE_PRIVATE);
 
-        mFragmentManager = getFragmentManager();
-
         dictionary = Dictionary.getInstance(getApplicationContext());
 
         setContentView(R.layout.activity_inventory);
@@ -63,42 +54,12 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
             setSupportActionBar(toolbar);
         }
 
-        initFragments();
         updateInventory();
 
-        final Button inventory_fragment_button = (Button) findViewById(R.id.inventory_fragment_button);
-
-        inventory_fragment_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction transaction = fm.beginTransaction();
-                Fragment statsFragment = mFragmentManager.findFragmentById(R.id.inventory_fragment_stats);
-                Fragment inventoryFragment = mFragmentManager.findFragmentById(R.id.inventory_fragment_current_inventory);
-
-                if (mShowingInventory) {
-                    hideFragment(inventoryFragment);
-                    showFragment(statsFragment);
-
-                    mShowingInventory = false;
-                    inventory_fragment_button.setText("INVENTORY");
-                } else {
-                    hideFragment(statsFragment);
-                    showFragment(inventoryFragment);
-
-                    mShowingInventory = true;
-                    inventory_fragment_button.setText("STATS & HISTORY");
-                }
-
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
-
-        final FloatingActionButton wordSubmitButton =
+        final FloatingActionButton submitWordButton =
                 (FloatingActionButton) findViewById(R.id.submit_word_button);
 
-        wordSubmitButton.setOnClickListener(new View.OnClickListener() {
+        submitWordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EditText wordField = (EditText) findViewById(R.id.submit_word_text);
@@ -220,28 +181,6 @@ public class InventoryActivity extends AppCompatActivity implements HistoryStats
             textView.setTypeface(textView.getTypeface(), Typeface.NORMAL);
             textView.setTextColor(Color.DKGRAY);
         }
-    }
-
-    private void initFragments() {
-        Fragment inventoryFragment = mFragmentManager.findFragmentById(R.id.inventory_fragment_stats);
-        Fragment statsFragment = mFragmentManager.findFragmentById(R.id.inventory_fragment_stats);
-
-        showFragment(inventoryFragment);
-        hideFragment(statsFragment);
-
-        mShowingInventory = true;
-    }
-
-    private void showFragment(Fragment fragment) {
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.show(fragment);
-        ft.commit();
-    }
-
-    private void hideFragment(Fragment fragment) {
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.hide(fragment);
-        ft.commit();
     }
 
     @Override
