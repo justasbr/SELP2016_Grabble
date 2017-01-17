@@ -30,7 +30,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="32"
-                android:textSize="26sp" />
+                android:textSize="26sp"
+                android:id="@+id/stats_total_words" />
         </LinearLayout>
 
         <LinearLayout
@@ -43,7 +44,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Points"
+                android:text="Your total points"
                 android:textColor="@color/colorPrimary"
                 android:textSize="30sp" />
 
@@ -51,7 +52,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="9432"
-                android:textSize="26sp" />
+                android:textSize="26sp"
+                android:id="@+id/stats_total_points" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,7 +74,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bananas (199)"
-                android:textSize="26sp" />
+                android:textSize="26sp"
+                android:id="@+id/stats_best_word" />
         </LinearLayout>
 
         <LinearLayout
@@ -93,6 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="100"
+                android:id="@+id/stats_total_ppw"
                 android:textSize="26sp" />
         </LinearLayout>
 
@@ -110,30 +114,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="30sp" />
 
-            <LinearLayout
+            <ListView
+                android:id="@+id/submitted_words_listview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_vertical|center_horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Atlanta"
-                    android:textSize="26sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Buzzing"
-                    android:textSize="26sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Zombies"
-                    android:textSize="26sp" />
-            </LinearLayout>
+                android:layout_height="match_parent" />
 
         </LinearLayout>
     </LinearLayout>
