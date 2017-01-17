@@ -58,10 +58,11 @@
             app:backgroundTint="@color/colorAccent"
             app:elevation="16dp"
             app:rippleColor="@android:color/transparent"
-            app:srcCompat="@drawable/amu_bubble_mask" />
+            app:srcCompat="@drawable/stats_color" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/leaderboard_button"
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:layout_margin="8dp"
@@ -70,8 +71,7 @@
             app:backgroundTint="@color/colorAccent"
             app:elevation="16dp"
             app:rippleColor="@android:color/transparent"
-            app:srcCompat="@drawable/trophy_color"
-            android:layout_width="wrap_content" />
+            app:srcCompat="@drawable/trophy_color" />
 
     </LinearLayout>
 
