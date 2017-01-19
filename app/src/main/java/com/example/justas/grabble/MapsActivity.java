@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -299,6 +300,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
+                        Manifest.permission.ACCESS_FINE_LOCATION, true);
+            }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
     public boolean onMyLocationButtonClick() {
         Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
         return false;
@@ -335,7 +348,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (MarkerItem pickedUpItem : pickedUpItems) {
                 mMarkerItems.remove(pickedUpItem);
                 mClusterManager.removeItem(pickedUpItem);
-                storeMarkerInDb(pickedUpItem);
+                storeMarker(pickedUpItem);
                 incrementLetterCount(pickedUpItem.getLabel());
                 itemsCollected = true;
             }
@@ -366,7 +379,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void storeMarkerInDb(MarkerItem marker) {
+    private void storeMarker(MarkerItem marker) {
         String letter = marker.getLabel();
         String lat = String.valueOf(marker.getPosition().latitude);
         String lng = String.valueOf(marker.getPosition().longitude);
@@ -399,9 +412,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void incrementLetterCount(String letterLabel) {
         int oldValue = sharedPrefs.getInt(letterLabel, 0);
         int updatedValue = oldValue + 1;
-
-//        String letterCollectedMessage = letterLabel + " " + String.valueOf(updatedValue);
-//        Log.d("LETTER_COLLECTED", letterCollectedMessage);
 
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putInt(letterLabel, updatedValue).apply();
@@ -517,6 +527,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Bitmap icon = mIconGenerator.makeIcon(markerItem.getLabel());
             markerOptions.anchor(0.5f, 0.5f).icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
+
     }
 
     //Based on an example from Stack Overflow
