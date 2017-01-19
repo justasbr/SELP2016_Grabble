@@ -29,18 +29,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -51,6 +41,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private View mProgressView;
 
+    private Button mEmailSignInButton;
+    private Button mRandomUsernameButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +52,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        Button mRandomUsernameButton = (Button) findViewById(R.id.generate_random_name_button);
+        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mRandomUsernameButton = (Button) findViewById(R.id.generate_random_name_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -262,14 +256,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
             }
 
             // TODO: register the new account here.
