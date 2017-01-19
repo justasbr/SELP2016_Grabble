@@ -1,6 +1,6 @@
 package com.example.justas.grabble;
 
-public class ScoredWord {
+public class ScoredWord implements Comparable<ScoredWord> {
     public String word;
     public int score = -1;
 
@@ -14,5 +14,11 @@ public class ScoredWord {
             return word + " (" + score + ")";
         }
         return "-";
+    }
+
+
+    @Override
+    public int compareTo(ScoredWord other) {
+        return this.score - other.score;
     }
 }

@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +21,6 @@ import android.widget.Toast;
 import com.example.justas.grabble.data.SubmittedWordsContract.WordEntry;
 import com.example.justas.grabble.data.SubmittedWordsOpenHelper;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.justas.grabble.Utility.getDateTime;
@@ -29,10 +29,13 @@ public class InventoryActivity extends AppCompatActivity implements CurrentInven
 
     private SharedPreferences sharedPrefs;
 
+    private EditText mWordField;
+
     private SubmittedWordsOpenHelper mDbHelper;
     private SQLiteDatabase db;
 
     private Dictionary dictionary;
+    private WordEvaluator wordEvaluator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class InventoryActivity extends AppCompatActivity implements CurrentInven
 
         dictionary = Dictionary.getInstance(getApplicationContext());
 
+        wordEvaluator = new WordEvaluator(getApplicationContext());
+
         setContentView(R.layout.activity_inventory);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -59,16 +64,40 @@ public class InventoryActivity extends AppCompatActivity implements CurrentInven
         final FloatingActionButton submitWordButton =
                 (FloatingActionButton) findViewById(R.id.submit_word_button);
 
+        mWordField = (EditText) findViewById(R.id.submit_word_text);
+
+
         submitWordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText wordField = (EditText) findViewById(R.id.submit_word_text);
-                String submission = wordField.getText().toString();
+                submitWordButton.setEnabled(false);
 
+                String submission = mWordField.getText().toString();
                 if (isValidWord(submission)) {
                     submitWord(submission);
-                    wordField.setText("");
+                    mWordField.setText("");
                 }
+
+                submitWordButton.setEnabled(true);
+            }
+        });
+
+        final Button suggestWordButton = (Button) findViewById(R.id.suggest_word_button);
+
+        suggestWordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                suggestWordButton.setEnabled(false);
+
+                ScoredWord scoredWord = dictionary.getSuggestion();
+                if (scoredWord != null) {
+                    mWordField.setText(scoredWord.word);
+                    Toast.makeText(getApplicationContext(), "This will net you " + String.valueOf(scoredWord.score)
+                            + " points.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "There are no possible words yet.", Toast.LENGTH_SHORT).show();
+                }
+                suggestWordButton.setEnabled(true);
             }
         });
     }
@@ -81,7 +110,7 @@ public class InventoryActivity extends AppCompatActivity implements CurrentInven
         } else if (!dictionary.containsWord(word)) {
             showShortToast(getString(R.string.warning_submitted_word_not_in_dict));
             return false;
-        } else if (!hasLettersFor(word)) {
+        } else if (!wordEvaluator.hasLettersFor(word)) {
             showShortToast(getString(R.string.warning_submitted_word_not_enough_letters));
             return false;
         } else {
@@ -97,55 +126,18 @@ public class InventoryActivity extends AppCompatActivity implements CurrentInven
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
-    private boolean hasLettersFor(String word) {
-        Map<Character, Integer> charCount = charOccurences(word);
-        for (char c : charCount.keySet()) {
-            int possessed = sharedPrefs.getInt(String.valueOf(c), 0);
-            int needForWord = charCount.get(c);
-
-            if (possessed < needForWord) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private Map<Character, Integer> charOccurences(String word) {
-        Map<Character, Integer> occCount = new HashMap<>();
-        for (char c : word.toCharArray()) {
-            int count = occCount.containsKey(c) ? occCount.get(c) : 0;
-            int updatedCount = count + 1;
-            occCount.put(c, updatedCount);
-        }
-        return occCount;
-    }
-
     private void submitWord(String word) {
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        Map<Character, Integer> charCount = charOccurences(word);
-        for (char c : charCount.keySet()) {
-
-            String letterLabel = String.valueOf(c);
-            int possessed = sharedPrefs.getInt(letterLabel, 0);
-            int used = charCount.get(c);
-
-            int updatedCount = possessed - used;
-
-            editor.putInt(letterLabel, updatedCount);
-        }
-
-        editor.commit();
+        wordEvaluator.decrementLetters(word);
         updateInventory();
-        storeWordInDb(word);
-
+        storeSubmission(word);
         showLongToast(getString(R.string.word_submitted_congrats) + word);
     }
 
-    private void storeWordInDb(String word) {
+    private void storeSubmission(String word) {
 
-        WordScorer wordScorer = new WordScorer();
+        WordEvaluator wordEvaluator = new WordEvaluator(getApplicationContext());
         ContentValues values = new ContentValues();
-        int score = wordScorer.wordScoreOf(word);
+        int score = wordEvaluator.wordScoreOf(word);
 
         values.put(WordEntry.COLUMN_NAME_WORD, word);
         values.put(WordEntry.COLUMN_NAME_SCORE, score);
