@@ -6,14 +6,17 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.justas.grabble.dummy.DummyContent;
-import com.example.justas.grabble.dummy.DummyContent.DummyItem;
-
+import java.io.IOException;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A fragment representing a list of Items.
@@ -22,9 +25,13 @@ import java.util.List;
  * interface.
  */
 public class ScoreFragment extends Fragment {
+    private static final String LEADERBOARD_INDEX = "leaderboard_index";
 
     // TODO: Customize parameters
     private int mColumnCount = 1;
+
+    private List<Player> mPlayers;
+    private RecyclerView mRecyclerView;
 
     private OnListFragmentInteractionListener mListener;
 
@@ -35,10 +42,53 @@ public class ScoreFragment extends Fragment {
     public ScoreFragment() {
     }
 
+    public static ScoreFragment newInstance(int index) {
+        ScoreFragment scoreFragment = new ScoreFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(LEADERBOARD_INDEX, index);
+        scoreFragment.setArguments(args);
+
+        return scoreFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        int leaderboardIndex = getArguments().getInt(LEADERBOARD_INDEX, Leaderboard.ALL_TIME);
 
+        fetchLeaderboard(leaderboardIndex);
+        super.onCreate(savedInstanceState);
+    }
+
+    private void fetchLeaderboard(int index) {
+        String timeInterval = Leaderboard.getPathParameter(index);
+
+        try {
+            ServerService.getLeaderboard(timeInterval, new Callback<LeaderboardFeed>() {
+                @Override
+                public void onResponse(Call<LeaderboardFeed> call, Response<LeaderboardFeed> response) {
+                    if (response.body() == null) {
+                        return;
+                    }
+
+                    LeaderboardFeed leaderboardFeed = response.body();
+                    mPlayers = leaderboardFeed.getLeaderboard();
+                    Log.d("mPlayers", String.valueOf(mPlayers.size()));
+
+                    if (mRecyclerView != null) {
+                        mRecyclerView.setAdapter(new LeaderboardRecyclerViewAdapter(mPlayers, mListener));
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<LeaderboardFeed> call, Throwable t) {
+                    Log.d("Leaderboard exception", t.toString());
+                }
+            });
+        } catch (IOException e) {
+            Log.d("Leaderboard exception", e.toString());
+        }
     }
 
     @Override
@@ -49,13 +99,12 @@ public class ScoreFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            mRecyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyScoreRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         }
         return view;
     }
@@ -79,6 +128,6 @@ public class ScoreFragment extends Fragment {
     }
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Player item);
     }
 }

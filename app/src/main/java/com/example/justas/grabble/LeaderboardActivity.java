@@ -7,10 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-
-import com.example.justas.grabble.dummy.DummyContent;
 
 public class LeaderboardActivity extends AppCompatActivity implements ScoreFragment.OnListFragmentInteractionListener {
 
@@ -19,21 +16,16 @@ public class LeaderboardActivity extends AppCompatActivity implements ScoreFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
 
         viewPager.setAdapter(new SectionPagerAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        Log.d("DEBUG", "123");
+    public void onListFragmentInteraction(Player item) {
+        Log.d("LISTFRAGMENT", "interaction");
     }
 
     public class SectionPagerAdapter extends FragmentPagerAdapter {
@@ -43,31 +35,32 @@ public class LeaderboardActivity extends AppCompatActivity implements ScoreFragm
         }
 
         @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new ScoreFragment();
-                case 1:
+        public Fragment getItem(int pos) {
+            switch (pos) {
+                case Leaderboard.TODAY:
+                    return ScoreFragment.newInstance(pos);
+                case Leaderboard.ALL_TIME:
+                    return ScoreFragment.newInstance(pos);
                 default:
-                    return new ScoreFragment();
+                    return null;
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return Leaderboard.count();
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Today";
-                case 1:
+        public CharSequence getPageTitle(int pos) {
+            switch (pos) {
+                case Leaderboard.TODAY:
+                    return Leaderboard.titleOf(pos);
+                case Leaderboard.ALL_TIME:
+                    return Leaderboard.titleOf(pos);
                 default:
-                    return "All-Time";
+                    return null;
             }
         }
     }
-
 }
