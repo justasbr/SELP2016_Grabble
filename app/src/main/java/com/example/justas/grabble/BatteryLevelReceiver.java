@@ -21,7 +21,7 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
 
         if (isBatteryLow && !batterySaverMode) {
             editor.putBoolean(batterySaverPref, true).apply();
-            
+
             Toast.makeText(ctx, ctx.getString(R.string.low_battery_warning), Toast.LENGTH_SHORT).show();
         }
 

@@ -1,13 +1,10 @@
 package com.example.justas.grabble;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.app.FragmentManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 

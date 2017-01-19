@@ -1,13 +1,9 @@
 package com.example.justas.grabble;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -15,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.justas.grabble.data.SubmittedWordsContract.WordEntry;
 import com.example.justas.grabble.data.SubmittedWordsOpenHelper;
-import com.google.android.gms.vision.text.Text;
 
 public class HistoryStatsActivity extends AppCompatActivity {
     private ListView mSubmittedWordsListView;
