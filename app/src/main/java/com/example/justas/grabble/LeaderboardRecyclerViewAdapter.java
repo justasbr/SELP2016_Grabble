@@ -30,8 +30,8 @@ public class LeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<Leaderb
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).name);
-        holder.mContentView.setText(String.valueOf(mValues.get(position).totalPoints)); //todo prob remove
+        holder.mIdView.setText(mValues.get(position).getName());
+        holder.mContentView.setText(String.valueOf(mValues.get(position).getTotalPoints())); //todo prob remove
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

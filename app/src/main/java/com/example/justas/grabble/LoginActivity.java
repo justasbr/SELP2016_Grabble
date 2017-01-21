@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.Settings.Secure;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,10 +27,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.security.AccessController.getContext;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
@@ -41,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private AutoCompleteTextView mUsernameView;
     private View mLoginFormView;
     private View mProgressView;
 
@@ -50,13 +52,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private String android_id;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mUsernameView = (AutoCompleteTextView) findViewById(R.id.email);
 
         mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mRandomUsernameButton = (Button) findViewById(R.id.generate_random_name_button);
@@ -67,13 +68,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        mEmailView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mUsernameView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     attemptLoginTemp();
                 }
                 return false;
+            }
+        });
+
+        mRandomUsernameButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fetchRandomUsername();
             }
         });
 
@@ -85,14 +93,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void attemptLoginTemp() {
-        String email = mEmailView.getText().toString();
-        if (email.length() > 0) {
-            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-            hideKeyboard();
-            finish();
+        String username = mUsernameView.getText().toString();
+        if (username.length() == 0) {
+            mUsernameView.setError(getString(R.string.empty_username_field));
+            mUsernameView.requestFocus();
         } else {
-            mEmailView.setError(getString(R.string.empty_username_field));
-            mEmailView.requestFocus();
+            UserDetails userDetails = new UserDetails(android_id, username);
+            try {
+                ServerService.createNewUser(userDetails, new Callback<Player>() {
+                    @Override
+                    public void onResponse(Call<Player> call, Response<Player> response) {
+                        if (response.body() != null) {
+                            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                            hideKeyboard();
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Player> call, Throwable t) {
+                        Log.d("T", t.toString());
+                    }
+                });
+            } catch (IOException e) {
+                Log.d("E", e.toString());
+            }
         }
     }
 
@@ -107,22 +132,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Reset errors.
-        mEmailView.setError(null);
+        mUsernameView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String email = mUsernameView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            mUsernameView.setError(getString(R.string.error_field_required));
+            focusView = mUsernameView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            mUsernameView.setError(getString(R.string.error_invalid_email));
+            focusView = mUsernameView;
             cancel = true;
         }
 
@@ -220,7 +245,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        mUsernameView.setAdapter(adapter);
     }
 
     private void hideKeyboard() {
@@ -228,6 +253,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public void fetchRandomUsername() {
+        try {
+            ServerService.getRandomUsername(new Callback<Player>() {
+                @Override
+                public void onResponse(Call<Player> call, Response<Player> response) {
+                    Log.d("USERNAME", "123123");
+                    if (response.body() != null) {
+                        Player player = response.body();
+
+                        mUsernameView.setText(player.getName());
+                        mUsernameView.setSelection(player.getName().length());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Player> call, Throwable t) {
+                    Log.d("Random username", t.toString());
+                }
+            });
+        } catch (IOException e) {
+            Log.d("Random username", e.toString());
         }
     }
 
@@ -279,8 +328,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 finish();
             } else {
-                mEmailView.setError(getString(R.string.error_invalid_email));
-                mEmailView.requestFocus();
+                mUsernameView.setError(getString(R.string.error_invalid_email));
+                mUsernameView.requestFocus();
             }
         }
 
