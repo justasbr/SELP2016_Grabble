@@ -25,7 +25,7 @@ import java.util.Map;
 
 import static com.example.justas.grabble.Utility.getDateTime;
 
-public class InventoryActivity extends AppCompatActivity implements CurrentInventoryFragment.OnFragmentInteractionListener {
+public class InventoryActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPrefs;
 
@@ -175,13 +175,7 @@ public class InventoryActivity extends AppCompatActivity implements CurrentInven
         }
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
     public void onBackPressed() {
-        Log.d("BACK CLICKED", "");
         finish();
     }
 
