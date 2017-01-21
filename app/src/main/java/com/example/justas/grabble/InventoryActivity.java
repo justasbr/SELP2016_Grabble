@@ -20,13 +20,19 @@ import android.widget.Toast;
 import com.example.justas.grabble.data.SubmittedWordsContract.WordEntry;
 import com.example.justas.grabble.data.SubmittedWordsOpenHelper;
 
+import static com.example.justas.grabble.Utility.getDate;
 import static com.example.justas.grabble.Utility.getDateTime;
 
 public class InventoryActivity extends AppCompatActivity {
+    private static final String SUGGESTIONS_REPLENISHED_DATE = "suggestion_replenished_on";
+    private static final String SUGGESTIONS_LEFT = "suggestions_left";
+    private static final int SUGGESTIONS_PER_DAY = 3;
 
     private SharedPreferences sharedPrefs;
 
     private EditText mWordField;
+    private Button mSuggestWordButton;
+    private FloatingActionButton mSubmitWordButton;
 
     private SubmittedWordsOpenHelper mDbHelper;
     private SQLiteDatabase db;
@@ -56,18 +62,21 @@ public class InventoryActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
         }
 
-        updateInventory();
-
-        final FloatingActionButton submitWordButton =
-                (FloatingActionButton) findViewById(R.id.submit_word_button);
-
+        mSuggestWordButton = (Button) findViewById(R.id.suggest_word_button);
         mWordField = (EditText) findViewById(R.id.submit_word_text);
 
+        updateSuggestionCount();
+        updateInventory();
 
-        submitWordButton.setOnClickListener(new View.OnClickListener() {
+
+        mSubmitWordButton =
+                (FloatingActionButton) findViewById(R.id.submit_word_button);
+
+
+        mSubmitWordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submitWordButton.setEnabled(false);
+                mSubmitWordButton.setEnabled(false);
 
                 String submission = mWordField.getText().toString();
                 if (isValidWord(submission)) {
@@ -75,28 +84,64 @@ public class InventoryActivity extends AppCompatActivity {
                     mWordField.setText("");
                 }
 
-                submitWordButton.setEnabled(true);
+                mSubmitWordButton.setEnabled(true);
             }
         });
 
-        final Button suggestWordButton = (Button) findViewById(R.id.suggest_word_button);
 
-        suggestWordButton.setOnClickListener(new View.OnClickListener() {
+        mSuggestWordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                suggestWordButton.setEnabled(false);
-
+                mSuggestWordButton.setEnabled(false);
                 ScoredWord scoredWord = dictionary.getSuggestion();
+                mSuggestWordButton.setEnabled(true);
+
                 if (scoredWord != null) {
+                    decrementSuggestionCount();
                     mWordField.setText(scoredWord.word);
                     Toast.makeText(getApplicationContext(), "This will net you " + String.valueOf(scoredWord.score)
                             + " points.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "There are no possible words yet.", Toast.LENGTH_SHORT).show();
                 }
-                suggestWordButton.setEnabled(true);
             }
         });
+    }
+
+    private void decrementSuggestionCount() {
+        int suggestionsLeft = sharedPrefs.getInt(SUGGESTIONS_LEFT, 0);
+        suggestionsLeft--;
+
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putInt(SUGGESTIONS_LEFT, suggestionsLeft);
+        editor.commit();
+
+        updateSuggestionButton();
+    }
+
+    private void updateSuggestionCount() {
+        String today = getDate();
+        String lastReplenished = sharedPrefs.getString(SUGGESTIONS_REPLENISHED_DATE, "");
+
+        if (!today.equals(lastReplenished)) {
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+
+            editor.putString(SUGGESTIONS_REPLENISHED_DATE, today);
+            editor.putInt(SUGGESTIONS_LEFT, SUGGESTIONS_PER_DAY);
+
+            editor.commit();
+        }
+        updateSuggestionButton();
+    }
+
+    private void updateSuggestionButton() {
+        int suggestionsLeft = Math.max(0, sharedPrefs.getInt(SUGGESTIONS_LEFT, 0));
+
+        String btnText = getString(R.string.get_suggestion) +
+                " (" + String.valueOf(suggestionsLeft) + ")";
+
+        mSuggestWordButton.setEnabled(suggestionsLeft > 0);
+        mSuggestWordButton.setText(btnText);
     }
 
 

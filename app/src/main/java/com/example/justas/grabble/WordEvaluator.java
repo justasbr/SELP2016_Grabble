@@ -101,17 +101,16 @@ public class WordEvaluator {
     }
 
     public boolean hasLettersFor(String word) {
+        Map<Character, Integer> charCount = charOccurences(word);
+        for (char c : charCount.keySet()) {
+            int possessed = sharedPrefs.getInt(String.valueOf(c), 0);
+            int needForWord = charCount.get(c);
+
+            if (possessed < needForWord) {
+                return false;
+            }
+        }
         return true;
-//        Map<Character, Integer> charCount = charOccurences(word);
-//        for (char c : charCount.keySet()) {
-//            int possessed = sharedPrefs.getInt(String.valueOf(c), 0);
-//            int needForWord = charCount.get(c);
-//
-//            if (possessed < needForWord) {
-//                return false;
-//            }
-//        }
-//        return true;
     }
 
     private Map<Character, Integer> charOccurences(String word) {
