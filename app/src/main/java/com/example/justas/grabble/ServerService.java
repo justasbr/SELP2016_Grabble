@@ -3,10 +3,7 @@ package com.example.justas.grabble;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
-import java.lang.reflect.GenericSignatureFormatError;
 import java.util.List;
 
 import retrofit2.Call;
@@ -19,7 +16,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public final class ServerService {
-//    public static final String API_URL = "https://grabble-backend-justasb.herokuapp.com/";
+    //    public static final String API_URL = "https://grabble-backend-justasb.herokuapp.com/";
     public static final String API_URL = "http://10.0.2.2:3000/";
 
     public interface Placemarks {

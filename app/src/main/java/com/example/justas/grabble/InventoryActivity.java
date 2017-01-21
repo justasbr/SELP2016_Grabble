@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +19,6 @@ import android.widget.Toast;
 
 import com.example.justas.grabble.data.SubmittedWordsContract.WordEntry;
 import com.example.justas.grabble.data.SubmittedWordsOpenHelper;
-
-import java.util.Map;
 
 import static com.example.justas.grabble.Utility.getDateTime;
 
