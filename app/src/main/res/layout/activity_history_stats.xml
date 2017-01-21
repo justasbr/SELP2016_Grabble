@@ -29,7 +29,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="32"
+                android:text="0"
                 android:textSize="26sp"
                 android:id="@+id/stats_total_words" />
         </LinearLayout>
@@ -44,14 +44,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your total points"
+                android:text="Total points"
                 android:textColor="@color/colorPrimary"
                 android:textSize="30sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="9432"
+                android:text="0"
                 android:textSize="26sp"
                 android:id="@+id/stats_total_points" />
         </LinearLayout>
@@ -73,7 +73,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bananas (199)"
+                android:text="N/A"
                 android:textSize="26sp"
                 android:id="@+id/stats_best_word" />
         </LinearLayout>
@@ -95,7 +95,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="100"
+                android:text="N/A"
                 android:id="@+id/stats_total_ppw"
                 android:textSize="26sp" />
         </LinearLayout>

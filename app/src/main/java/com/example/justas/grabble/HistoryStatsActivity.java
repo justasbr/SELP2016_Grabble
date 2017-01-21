@@ -36,13 +36,17 @@ public class HistoryStatsActivity extends AppCompatActivity {
         TextView pointsTextView = (TextView) findViewById(R.id.stats_total_points);
         pointsTextView.setText(String.valueOf(nPoints));
 
-        String pointsPerWord = nSubmitted == 0 ? "N/A" : String.valueOf(nPoints / nSubmitted);
-        TextView pointsPerWordTextView = (TextView) findViewById(R.id.stats_total_ppw);
-        pointsPerWordTextView.setText(String.valueOf(pointsPerWord));
+        if (nSubmitted > 0) {
+            String pointsPerWord = String.valueOf(nPoints / nSubmitted);
+            TextView pointsPerWordTextView = (TextView) findViewById(R.id.stats_total_ppw);
+            pointsPerWordTextView.setText(String.valueOf(pointsPerWord));
+        }
 
         ScoredWord bestWord = getBestWord();
-        TextView bestWordTextView = (TextView) findViewById(R.id.stats_best_word);
-        bestWordTextView.setText(bestWord.prettyPrint());
+        if (bestWord != null) {
+            TextView bestWordTextView = (TextView) findViewById(R.id.stats_best_word);
+            bestWordTextView.setText(bestWord.prettyPrint());
+        }
 
         Cursor cursor = fetchAllSubmittedWords();
         SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getApplicationContext(), R.layout.submitted_words_list_item, cursor,
@@ -53,7 +57,7 @@ public class HistoryStatsActivity extends AppCompatActivity {
     }
 
     private Cursor fetchAllSubmittedWords() {
-        return db.query(WordEntry.TABLE_NAME, null, null, null, null, null, null);
+        return db.query(WordEntry.TABLE_NAME, null, null, null, null, null, WordEntry.COLUMN_NAME_DATETIME + " DESC");
     }
 
     private int fetchWordCount() {

@@ -9,8 +9,8 @@ import com.example.justas.grabble.data.CollectedMarkersContract.MarkerEntry;
 
 public class CollectedMarkersOpenHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "grabble_sqlite.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final String DATABASE_NAME = "markers.db";
+    private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_TABLE_CREATE =
             "CREATE TABLE " + MarkerEntry.TABLE_NAME + " (" +

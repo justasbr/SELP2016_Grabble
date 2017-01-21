@@ -9,8 +9,8 @@ import com.example.justas.grabble.data.SubmittedWordsContract.WordEntry;
 
 public class SubmittedWordsOpenHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "grabble_sqlite.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final String DATABASE_NAME = "words.db";
+    private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_TABLE_CREATE =
             "CREATE TABLE " + WordEntry.TABLE_NAME + " (" +
