@@ -14,8 +14,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.Settings.Secure;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +30,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.security.AccessController.getContext;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
@@ -43,6 +47,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private Button mEmailSignInButton;
     private Button mRandomUsernameButton;
+
+    private String android_id;
 
 
     @Override
@@ -73,6 +79,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        android_id = IdentificationUtils.getAndroidId(getApplicationContext());
+        Log.d("ANDROID_ID", android_id);
     }
 
     private void attemptLoginTemp() {
