@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.justas.grabble.InventoryActivity"
     tools:showIn="@layout/activity_inventory">
@@ -27,7 +29,7 @@
             <EditText
                 android:id="@+id/submit_word_text"
                 style="@style/Widget.AppCompat.EditText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -36,7 +38,7 @@
                 android:ems="10"
                 android:fontFamily="sans-serif-smallcaps"
                 android:hint="@string/submit_word"
-                android:inputType="textCapCharacters|textPersonName"
+                android:inputType="textNoSuggestions|textCapCharacters"
                 android:maxLength="7"
                 android:selectAllOnFocus="false"
                 android:singleLine="true"
@@ -77,10 +79,10 @@
                 android:id="@+id/suggest_word_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/get_suggestion"
                 android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp" />
+                android:layout_marginRight="40dp"
+                android:layout_weight="1"
+                android:text="@string/get_suggestion" />
 
         </LinearLayout>
 

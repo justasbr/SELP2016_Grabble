@@ -1,5 +1,6 @@
 package com.example.justas.grabble;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -65,9 +67,17 @@ public class InventoryActivity extends AppCompatActivity {
         mSuggestWordButton = (Button) findViewById(R.id.suggest_word_button);
         mWordField = (EditText) findViewById(R.id.submit_word_text);
 
+        mWordField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
         updateSuggestionCount();
         updateInventory();
-
 
         mSubmitWordButton =
                 (FloatingActionButton) findViewById(R.id.submit_word_button);
@@ -142,6 +152,11 @@ public class InventoryActivity extends AppCompatActivity {
 
         mSuggestWordButton.setEnabled(suggestionsLeft > 0);
         mSuggestWordButton.setText(btnText);
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 

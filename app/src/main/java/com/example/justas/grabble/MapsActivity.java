@@ -102,6 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         initApplicationPrefs();
 
+
         mDbHelper = new CollectedMarkersOpenHelper(getApplicationContext());
         db = mDbHelper.getWritableDatabase();
 
