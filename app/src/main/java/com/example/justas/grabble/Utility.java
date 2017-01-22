@@ -1,12 +1,17 @@
 package com.example.justas.grabble;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,5 +62,30 @@ class Utility {
         FirstTimePlayerDialogFragment alert = new FirstTimePlayerDialogFragment();
         alert.setCancelable(false);
         alert.show(fragmentManager, "dialog");
+
+    }
+
+    private static class FirstTimePlayerDialogFragment extends DialogFragment {
+        public FirstTimePlayerDialogFragment() {
+
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.new_player_dialog, null);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Welcome to Grabble. Enjoy!")
+                    .setView(dialogView)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //User closes the informational dialog, nothing happens.
+                        }
+                    });
+
+            return builder.create();
+        }
     }
 }
