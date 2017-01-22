@@ -72,6 +72,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final double PICKUP_DISTANCE_IN_METERS = 10;
 
     private static final int MARKERS_TO_SHOW = 100;
+    public static final String SHOW_BEGINNER_POPUP = "show_beginner_popup";
 
     private boolean mPermissionDenied = false;
     protected static final String TAG = MapsActivity.class.getSimpleName();
@@ -112,7 +113,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setUpButtons();
 
-        Utility.showFirstTimePlayerAlert(MapsActivity.this);
+        boolean showBeginnerPopup = applicationPrefs.getBoolean(SHOW_BEGINNER_POPUP, true);
+        if (showBeginnerPopup) {
+            Utility.showFirstTimePlayerAlert(MapsActivity.this);
+        }
 
         buildGoogleApiClient();
 

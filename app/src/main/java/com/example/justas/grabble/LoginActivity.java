@@ -8,11 +8,13 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -36,6 +38,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+    private static String EXISTING_USER = "existing_user";
+    private static String USER_NAME = "user_name";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -52,8 +56,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private String android_id;
 
+    private SharedPreferences sharedPrefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean existingUser = sharedPrefs.getBoolean(EXISTING_USER, false);
+
+        if (existingUser) {
+            goToMap();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -104,9 +117,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     @Override
                     public void onResponse(Call<Player> call, Response<Player> response) {
                         if (response.body() != null) {
-                            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-                            hideKeyboard();
-                            finish();
+                            Player newPlayer = response.body();
+                            storeUserDetails(newPlayer);
+                            goToMap();
                         }
                     }
 
@@ -119,6 +132,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.d("E", e.toString());
             }
         }
+    }
+
+    private void storeUserDetails(Player player) {
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putBoolean(EXISTING_USER, true);
+        editor.putString(USER_NAME, player.getName());
+
+        editor.apply();
+    }
+
+    private void goToMap() {
+        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+        hideKeyboard();
+        finish();
     }
 
     /**

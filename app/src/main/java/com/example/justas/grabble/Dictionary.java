@@ -18,7 +18,7 @@ public class Dictionary {
 
     private Set<String> wordMap = new HashSet<>();
     private WordEvaluator wordEvaluator;
-    private ArrayList<ScoredWord> scoredWords = new ArrayList<>();
+    private ArrayList<ScoredWord> scoredWords;
 
     private Dictionary() {
         parseDictionaryFromFile();
@@ -56,8 +56,8 @@ public class Dictionary {
     }
 
     public ScoredWord getSuggestion() {
-        if (scoredWords.isEmpty()) {
-            setUpScoredWords();
+        if (scoredWords == null) {
+            initScoredWords();
         }
 
         if (wordEvaluator.numberOfLettersOwned() < 7) {
@@ -73,7 +73,8 @@ public class Dictionary {
         return null;
     }
 
-    private void setUpScoredWords() {
+    private synchronized void initScoredWords() {
+        scoredWords = new ArrayList<>();
 
         for (String word : wordMap) {
             int score = wordEvaluator.wordScoreOf(word);

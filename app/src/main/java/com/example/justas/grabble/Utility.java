@@ -6,8 +6,10 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -81,7 +83,12 @@ class Utility {
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            //User closes the informational dialog, nothing happens.
+                            SharedPreferences sharedPrefs =
+                                    PreferenceManager.getDefaultSharedPreferences(getContext());
+                            SharedPreferences.Editor editor = sharedPrefs.edit();
+
+                            //Make sure we do not show the popup again after user closes it the first time
+                            editor.putBoolean(MapsActivity.SHOW_BEGINNER_POPUP, false).apply();
                         }
                     });
 
