@@ -21,6 +21,12 @@ import android.widget.Toast;
 
 import com.example.justas.grabble.data.SubmittedWordsContract.WordEntry;
 import com.example.justas.grabble.data.SubmittedWordsOpenHelper;
+import com.example.justas.grabble.helper.Callbacks;
+import com.example.justas.grabble.helper.WordSubmission;
+
+import java.io.IOException;
+
+import retrofit2.Callback;
 
 import static com.example.justas.grabble.Utility.getDate;
 import static com.example.justas.grabble.Utility.getDateTime;
@@ -185,9 +191,18 @@ public class InventoryActivity extends AppCompatActivity {
 
     private void submitWord(String word) {
         wordEvaluator.decrementLetters(word);
-        updateInventory();
         storeSubmission(word);
+        sendSubmissionToServer(word);
+        updateInventory();
         showLongToast(getString(R.string.word_submitted_congrats) + word);
+    }
+
+    private void sendSubmissionToServer(String word) {
+        String id = IdentificationUtils.getAndroidId(getApplicationContext());
+        WordSubmission submission = new WordSubmission(word, id);
+
+        //Fire and forget
+        ServerService.submitWord(submission, Callbacks.empty());
     }
 
     private void storeSubmission(String word) {

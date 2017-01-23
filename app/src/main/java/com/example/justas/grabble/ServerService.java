@@ -3,6 +3,8 @@ package com.example.justas.grabble;
 
 import android.util.Log;
 
+import com.example.justas.grabble.helper.WordSubmission;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -83,6 +85,22 @@ public final class ServerService {
 
         User user = retrofit.create(User.class);
         Call<Player> call = user.newUser(userDetails);
+        call.enqueue(callback);
+    }
+
+    public interface SubmitWord {
+        @POST("/submitword")
+        Call<Object> submitWord(@Body WordSubmission body);
+    }
+
+    public static void submitWord(WordSubmission submission, Callback<Object> callback) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        SubmitWord submitter = retrofit.create(SubmitWord.class);
+        Call<Object> call = submitter.submitWord(submission);
         call.enqueue(callback);
     }
 }
