@@ -77,11 +77,10 @@ public class ScoreFragment extends Fragment {
                     mPlayers = leaderboardFeed.getLeaderboard();
                     Log.d("mPlayers", String.valueOf(mPlayers.size()));
 
+                    if (mPlayers.isEmpty()) {
+                        showWarning(getString(R.string.empty_leaderboard_text));
+                    }
                     if (mRecyclerView != null) {
-                        if (mPlayers.isEmpty()) {
-                            TextView emptyWarning = (TextView) getView().findViewById(R.id.empty_leaderboard_warning);
-                            emptyWarning.setVisibility(View.VISIBLE);
-                        }
                         mRecyclerView.setAdapter(new LeaderboardRecyclerViewAdapter(mPlayers, mListener));
                     }
 
@@ -89,11 +88,23 @@ public class ScoreFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<LeaderboardFeed> call, Throwable t) {
-                    Log.d("Leaderboard exception", t.toString());
+                    Log.d("LEADERBOARD PARSING", t.toString());
+                    showWarning(getString(R.string.leaderboard_failed_to_fetch));
                 }
             });
         } catch (IOException e) {
-            Log.d("Leaderboard exception", e.toString());
+            Log.d("LEADERBOARD PARSING", e.toString());
+            showWarning(getString(R.string.leaderboard_failed_to_fetch));
+        }
+    }
+
+    private void showWarning(String message) {
+        if (message != null) {
+            TextView warning = (TextView) getView().findViewById(R.id.leaderboard_warning);
+            if (warning != null) {
+                warning.setText(message);
+                warning.setVisibility(View.VISIBLE);
+            }
         }
     }
 

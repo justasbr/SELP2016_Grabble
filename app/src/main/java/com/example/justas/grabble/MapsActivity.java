@@ -309,6 +309,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                //Re-ask for location permissions
                 PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
                         Manifest.permission.ACCESS_FINE_LOCATION, true);
             }
@@ -520,7 +521,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected void onBeforeClusterItemRendered(MarkerItem markerItem, MarkerOptions markerOptions) {
-            //TODO Randomize color
             mIconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
 
             Bitmap icon = mIconGenerator.makeIcon(markerItem.getLabel());

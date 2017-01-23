@@ -150,4 +150,5 @@
     <string name="leaderboard_name_title">Name</string>
     <string name="leaderboard_score_title">Score</string>
     <string name="empty_leaderboard_text">This leaderboard is currently empty.</string>
+    <string name="leaderboard_failed_to_fetch">The leaderboard could not be fetched.</string>
 </resources>

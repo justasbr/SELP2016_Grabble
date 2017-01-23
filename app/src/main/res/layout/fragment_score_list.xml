@@ -7,7 +7,7 @@
 
 
     <TextView
-        android:id="@+id/empty_leaderboard_warning"
+        android:id="@+id/leaderboard_warning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/empty_leaderboard_text"
