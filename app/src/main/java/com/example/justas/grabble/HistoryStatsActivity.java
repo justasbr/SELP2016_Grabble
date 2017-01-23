@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.justas.grabble.data.SubmittedWordsContract.WordEntry;
 import com.example.justas.grabble.data.SubmittedWordsOpenHelper;
+import com.example.justas.grabble.helper.ScoredWord;
 
 public class HistoryStatsActivity extends AppCompatActivity {
     private ListView mSubmittedWordsListView;

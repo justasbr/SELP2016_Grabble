@@ -29,6 +29,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.justas.grabble.helper.Player;
+import com.example.justas.grabble.helper.UserDetails;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

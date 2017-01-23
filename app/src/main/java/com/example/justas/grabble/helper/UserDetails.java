@@ -1,4 +1,4 @@
-package com.example.justas.grabble;
+package com.example.justas.grabble.helper;
 
 public class UserDetails {
     private String id;

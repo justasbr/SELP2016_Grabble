@@ -3,6 +3,9 @@ package com.example.justas.grabble;
 
 import android.util.Log;
 
+import com.example.justas.grabble.helper.LeaderboardFeed;
+import com.example.justas.grabble.helper.Player;
+import com.example.justas.grabble.helper.UserDetails;
 import com.example.justas.grabble.helper.WordSubmission;
 
 import java.io.IOException;

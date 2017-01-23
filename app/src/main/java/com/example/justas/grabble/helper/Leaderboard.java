@@ -1,6 +1,6 @@
-package com.example.justas.grabble;
+package com.example.justas.grabble.helper;
 
-class Leaderboard {
+public class Leaderboard {
     public static final int TODAY = 0;
     public static final int ALL_TIME = 1;
 

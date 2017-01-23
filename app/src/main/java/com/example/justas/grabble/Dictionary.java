@@ -3,6 +3,8 @@ package com.example.justas.grabble;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.justas.grabble.helper.ScoredWord;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

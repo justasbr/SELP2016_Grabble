@@ -1,4 +1,4 @@
-package com.example.justas.grabble;
+package com.example.justas.grabble.helper;
 
 public class ScoredWord implements Comparable<ScoredWord> {
     public String word;

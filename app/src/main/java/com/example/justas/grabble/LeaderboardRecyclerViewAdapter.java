@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.justas.grabble.ScoreFragment.OnListFragmentInteractionListener;
+import com.example.justas.grabble.helper.Player;
 
 import java.util.List;
 

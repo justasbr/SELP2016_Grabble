@@ -22,11 +22,8 @@ import android.widget.Toast;
 import com.example.justas.grabble.data.SubmittedWordsContract.WordEntry;
 import com.example.justas.grabble.data.SubmittedWordsOpenHelper;
 import com.example.justas.grabble.helper.Callbacks;
+import com.example.justas.grabble.helper.ScoredWord;
 import com.example.justas.grabble.helper.WordSubmission;
-
-import java.io.IOException;
-
-import retrofit2.Callback;
 
 import static com.example.justas.grabble.Utility.getDate;
 import static com.example.justas.grabble.Utility.getDateTime;

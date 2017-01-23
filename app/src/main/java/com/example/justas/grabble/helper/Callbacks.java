@@ -6,12 +6,14 @@ import retrofit2.Response;
 
 //Based on stackOverflow example
 public final class Callbacks {
-    private static final Callback<Object> EMPTY = new Callback<Object>(){
+    private static final Callback<Object> EMPTY = new Callback<Object>() {
         @Override
-        public void onResponse(Call<Object> call, Response<Object> response) {}
+        public void onResponse(Call<Object> call, Response<Object> response) {
+        }
 
         @Override
-        public void onFailure(Call<Object> call, Throwable t) {}
+        public void onFailure(Call<Object> call, Throwable t) {
+        }
     };
 
     @SuppressWarnings("unchecked")
