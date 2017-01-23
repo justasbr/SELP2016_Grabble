@@ -65,6 +65,4 @@ public class MarkerItem implements ClusterItem {
         //Not the best hash function, but works well enough for our use case
         return this.letter.hashCode() + this.getPosition().hashCode();
     }
-
-
 }

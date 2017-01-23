@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO think about architecture of this class
-
 public class WordEvaluator {
     private HashMap<Character, Integer> charScores;
     private SharedPreferences sharedPrefs;
@@ -104,9 +102,9 @@ public class WordEvaluator {
         Map<Character, Integer> charCount = charOccurences(word);
         for (char c : charCount.keySet()) {
             int possessed = sharedPrefs.getInt(String.valueOf(c), 0);
-            int needForWord = charCount.get(c);
+            int neededForWord = charCount.get(c);
 
-            if (possessed < needForWord) {
+            if (possessed < neededForWord) {
                 return false;
             }
         }

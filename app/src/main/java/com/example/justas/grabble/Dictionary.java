@@ -84,6 +84,7 @@ public class Dictionary {
             scoredWords.add(new ScoredWord(word, score));
         }
 
+        //Descending order (in terms of word's value in points)
         Collections.sort(scoredWords, Collections.<ScoredWord>reverseOrder());
     }
 }
