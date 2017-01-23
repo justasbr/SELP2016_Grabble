@@ -43,18 +43,21 @@ public class Utility {
         int imageResource = android.R.drawable.ic_dialog_alert;
         Drawable image = ResourcesCompat.getDrawable(context.getResources(), imageResource, null);
 
-        builder.setTitle("Exit").setMessage("Do you want to close the application?")
+        builder.setTitle(context.getString(R.string.exit_dialog_title))
+                .setMessage(context.getString(R.string.question_close_grabble))
                 .setIcon(image).setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ((Activity) context).finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
+                .setPositiveButton(context.getString(R.string.yes),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                ((Activity) context).finish();
+                            }
+                        })
+                .setNegativeButton(context.getString(R.string.no),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        });
 
         AlertDialog alert = builder.create();
         alert.setCancelable(false);
@@ -81,19 +84,20 @@ public class Utility {
             View dialogView = inflater.inflate(R.layout.new_player_dialog, null);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Welcome to Grabble. Enjoy!")
+            builder.setTitle(getActivity().getString(R.string.welcome_to_grabble))
                     .setView(dialogView)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            SharedPreferences sharedPrefs =
-                                    PreferenceManager.getDefaultSharedPreferences(getContext());
-                            SharedPreferences.Editor editor = sharedPrefs.edit();
+                    .setPositiveButton(getActivity().getString(R.string.okay),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    SharedPreferences sharedPrefs =
+                                            PreferenceManager.getDefaultSharedPreferences(getContext());
+                                    SharedPreferences.Editor editor = sharedPrefs.edit();
 
-                            //Make sure we do not show the popup again after user closes it the first time
-                            editor.putBoolean(MapsActivity.SHOW_BEGINNER_POPUP, false).apply();
-                        }
-                    });
+                                    //Make sure we do not show the popup again after user closes it the first time
+                                    editor.putBoolean(MapsActivity.SHOW_BEGINNER_POPUP, false).apply();
+                                }
+                            });
 
             return builder.create();
         }

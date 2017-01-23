@@ -139,8 +139,8 @@
     <string name="inventory_file">INVENTORY_FILE</string>
     <string name="warning_submitted_word_length">Word must have 7 letters</string>
     <string name="warning_submitted_word_not_in_dict">This word is not in Grabble dictionary</string>
-    <string name="warning_submitted_word_not_enough_letters">You do not possess enough letters for this word</string>
-    <string name="word_submitted_congrats">Well done! You successfully submitted: </string>
+    <string name="warning_submitted_word_not_enough_letters">You do not have enough letters for this word</string>
+    <string name="word_submitted_congrats">Well done! Points received: </string>
     <string name="pref_only_show_closest">Preference Only Show Closest</string>
     <string name="pref_battery_saver">Preference Battery Saver</string>
     <string name="low_battery_warning">LOW BATTERY: Battery saver mode turned on</string>
@@ -151,4 +151,10 @@
     <string name="leaderboard_score_title">Score</string>
     <string name="empty_leaderboard_text">This leaderboard is currently empty.</string>
     <string name="leaderboard_failed_to_fetch">The leaderboard could not be fetched.</string>
+    <string name="question_close_grabble">Do you want to close Grabble?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="exit_dialog_title">Close game?</string>
+    <string name="welcome_to_grabble">Welcome to Grabble. Enjoy!</string>
+    <string name="okay">OK</string>
 </resources>

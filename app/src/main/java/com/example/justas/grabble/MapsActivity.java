@@ -116,16 +116,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setUpButtons();
 
-        boolean showBeginnerPopup = applicationPrefs.getBoolean(SHOW_BEGINNER_POPUP, true);
-        if (showBeginnerPopup) {
-            Utility.showFirstTimePlayerAlert(MapsActivity.this);
-        }
-
         buildGoogleApiClient();
 
         Context context = getApplicationContext();
         sharedPrefs = context.getSharedPreferences(
                 getString(R.string.inventory_file), Context.MODE_PRIVATE);
+
+        showBeginnerPopupIfNewPlayer();
+    }
+
+    private void showBeginnerPopupIfNewPlayer() {
+        boolean showBeginnerPopup = applicationPrefs.getBoolean(SHOW_BEGINNER_POPUP, true);
+        if (showBeginnerPopup) {
+            Utility.showFirstTimePlayerAlert(MapsActivity.this);
+        }
     }
 
     private void setUpButtons() {

@@ -115,7 +115,7 @@ public class InventoryActivity extends AppCompatActivity {
                 if (scoredWord != null) {
                     decrementSuggestionCount();
                     mWordField.setText(scoredWord.word);
-                    Toast.makeText(getApplicationContext(), "This will net you " + String.valueOf(scoredWord.score)
+                    Toast.makeText(getApplicationContext(), "This would give you " + String.valueOf(scoredWord.score)
                             + " points.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "There are no possible words yet.", Toast.LENGTH_SHORT).show();
@@ -185,16 +185,12 @@ public class InventoryActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
     }
 
-    private void showLongToast(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
-    }
-
     private void submitWord(String word) {
         wordEvaluator.decrementLetters(word);
         storeSubmission(word);
         sendSubmissionToServer(word);
         updateInventory();
-        showLongToast(getString(R.string.word_submitted_congrats) + word);
+        showShortToast(getString(R.string.word_submitted_congrats) + " " + wordEvaluator.wordScoreOf(word));
     }
 
     private void sendSubmissionToServer(String word) {
@@ -217,7 +213,6 @@ public class InventoryActivity extends AppCompatActivity {
 
         db.insert(WordEntry.TABLE_NAME, null, values);
         Log.d("WORD SUBMITTED SQLite", word + " " + score);
-
     }
 
     private void updateInventory() {
