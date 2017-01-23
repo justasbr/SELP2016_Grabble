@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.justas.grabble.helper.Leaderboard;
 import com.example.justas.grabble.helper.LeaderboardFeed;
@@ -58,9 +59,6 @@ public class ScoreFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        int leaderboardIndex = getArguments().getInt(LEADERBOARD_INDEX, Leaderboard.ALL_TIME);
-
-        fetchLeaderboard(leaderboardIndex);
         super.onCreate(savedInstanceState);
     }
 
@@ -80,6 +78,10 @@ public class ScoreFragment extends Fragment {
                     Log.d("mPlayers", String.valueOf(mPlayers.size()));
 
                     if (mRecyclerView != null) {
+                        if (mPlayers.isEmpty()) {
+                            TextView emptyWarning = (TextView) getView().findViewById(R.id.empty_leaderboard_warning);
+                            emptyWarning.setVisibility(View.VISIBLE);
+                        }
                         mRecyclerView.setAdapter(new LeaderboardRecyclerViewAdapter(mPlayers, mListener));
                     }
 
@@ -100,16 +102,21 @@ public class ScoreFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_score_list, container, false);
 
+        int leaderboardIndex = getArguments().getInt(LEADERBOARD_INDEX, Leaderboard.ALL_TIME);
+        fetchLeaderboard(leaderboardIndex);
+
+        View recyclerView = view.findViewById(R.id.leaderboard_recyclerview);
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (recyclerView instanceof RecyclerView) {
             Context context = view.getContext();
-            mRecyclerView = (RecyclerView) view;
+            mRecyclerView = (RecyclerView) recyclerView;
             if (mColumnCount <= 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
         }
+
         return view;
     }
 

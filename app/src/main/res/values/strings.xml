@@ -149,4 +149,5 @@
     <string name="leaderboard_position_title">Pos</string>
     <string name="leaderboard_name_title">Name</string>
     <string name="leaderboard_score_title">Score</string>
+    <string name="empty_leaderboard_text">This leaderboard is currently empty.</string>
 </resources>

@@ -20,10 +20,11 @@ public class LeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<Leaderb
     private final int bronzeColor = Color.rgb(205, 127, 50);
 
 
-    private final List<Player> mValues;
+    private final List<Player> mPlayers;
 
-    public LeaderboardRecyclerViewAdapter(List<Player> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public LeaderboardRecyclerViewAdapter(List<Player> players, OnListFragmentInteractionListener listener) {
+        mPlayers = players;
+
     }
 
     @Override
@@ -35,10 +36,10 @@ public class LeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<Leaderb
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
+        holder.mItem = mPlayers.get(position);
         holder.mPositionView.setText(String.valueOf(position + 1));
-        holder.mNameView.setText(mValues.get(position).getName());
-        holder.mScoreView.setText(String.valueOf(mValues.get(position).getTotalPoints()));
+        holder.mNameView.setText(mPlayers.get(position).getName());
+        holder.mScoreView.setText(String.valueOf(mPlayers.get(position).getTotalPoints()));
 
         setBackgroundColor(holder.mView, position);
     }
@@ -60,7 +61,7 @@ public class LeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<Leaderb
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mPlayers.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
