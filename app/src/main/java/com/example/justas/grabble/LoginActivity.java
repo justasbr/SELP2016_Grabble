@@ -33,6 +33,8 @@ import com.example.justas.grabble.helper.Player;
 import com.example.justas.grabble.helper.UserDetails;
 import com.example.justas.grabble.utils.IdentificationUtils;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,6 +126,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             Player newPlayer = response.body();
                             storeUserDetails(newPlayer);
                             goToMap();
+                        } else {
+                            try {
+                                JSONObject error = new JSONObject(response.errorBody().string());
+                                String errorMessage = error.getString("message");
+                                mUsernameView.setError(errorMessage);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
 
@@ -292,7 +302,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             ServerService.getRandomUsername(new Callback<Player>() {
                 @Override
                 public void onResponse(Call<Player> call, Response<Player> response) {
-                    Log.d("USERNAME", "123123");
                     if (response.body() != null) {
                         Player player = response.body();
 
