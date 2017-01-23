@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -60,8 +59,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Button mEmailSignInButton;
     private Button mRandomUsernameButton;
 
-    private String android_id;
-
     private SharedPreferences sharedPrefs;
 
     @Override
@@ -70,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean existingUser = sharedPrefs.getBoolean(EXISTING_USER, false);
 
         if (existingUser) {
-            goToMap();
+            skipToGameScreen();
         }
 
         super.onCreate(savedInstanceState);
@@ -83,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLoginTemp();
+                attemptLogin();
             }
         });
 
@@ -91,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    attemptLoginTemp();
+                    attemptLogin();
                 }
                 return false;
             }
@@ -106,17 +103,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        android_id = IdentificationUtils.getAndroidId(getApplicationContext());
-        Log.d("ANDROID_ID", android_id);
     }
 
-    private void attemptLoginTemp() {
+    private void attemptLogin() {
         String username = mUsernameView.getText().toString();
         if (username.length() == 0) {
             mUsernameView.setError(getString(R.string.empty_username_field));
             mUsernameView.requestFocus();
         } else {
+            String android_id = IdentificationUtils.getAndroidId(getApplicationContext());
             UserDetails userDetails = new UserDetails(android_id, username);
             try {
                 ServerService.createNewUser(userDetails, new Callback<Player>() {
@@ -125,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         if (response.body() != null) {
                             Player newPlayer = response.body();
                             storeUserDetails(newPlayer);
-                            goToMap();
+                            skipToGameScreen();
                         } else {
                             try {
                                 JSONObject error = new JSONObject(response.errorBody().string());
@@ -156,59 +151,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         editor.apply();
     }
 
-    private void goToMap() {
+    private void skipToGameScreen() {
         startActivity(new Intent(getApplicationContext(), MapsActivity.class));
         hideKeyboard();
         finish();
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        mUsernameView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = mUsernameView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
-            focusView = mUsernameView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mUsernameView.setError(getString(R.string.error_invalid_email));
-            focusView = mUsernameView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, "");
-            mAuthTask.execute((Void) null);
-        }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -305,18 +253,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if (response.body() != null) {
                         Player player = response.body();
 
-                        mUsernameView.setText(player.getName());
-                        mUsernameView.setSelection(player.getName().length());
+                        if (mUsernameView != null) {
+                            mUsernameView.setText(player.getName());
+                            mUsernameView.setSelection(player.getName().length());
+                        }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Player> call, Throwable t) {
-                    Log.d("Random username", t.toString());
+                    Log.d("Random_Username", t.toString());
                 }
             });
         } catch (IOException e) {
-            Log.d("Random username", e.toString());
+            Log.d("Random_Username", e.toString());
         }
     }
 

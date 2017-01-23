@@ -23,16 +23,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
+
 public class ScoreFragment extends Fragment {
     private static final String LEADERBOARD_INDEX = "leaderboard_index";
-
-    // TODO: Customize parameters
     private int mColumnCount = 1;
 
     private List<Player> mPlayers;

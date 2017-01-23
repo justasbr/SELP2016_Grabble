@@ -145,7 +145,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private View.OnClickListener start(final Class cls){
+    private View.OnClickListener start(final Class cls) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,9 +178,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     HashSet<MarkerItem> collectedMarkers = fetchCollectedMarkers();
                     mMarkerItems = filterOut(parsedItems, collectedMarkers);
-
-                    Log.d("DONT SHOW COLLECTED", "SIZE1 " + String.valueOf(mMarkerItems.size()));
-                    Log.d("DONT SHOW COLLECTED", "SIZE2 " + collectedMarkers.size());
 
                     if (mClusterManager != null) {
                         mClusterManager.addItems(mMarkerItems);
