@@ -51,7 +51,7 @@ public class MarkerItem implements ClusterItem {
             if (this.hasMissingInformation() || other.hasMissingInformation()) {
                 return false;
             }
-            return this.letter.equals(other.letter) && this.getPosition().equals(other.getPosition());
+            return this.letter.equals(other.letter) && getPosition().equals(other.getPosition());
         }
         return super.equals(object);
     }
@@ -63,7 +63,7 @@ public class MarkerItem implements ClusterItem {
         }
 
         //Not the best hash function, but works well enough for our use case
-        return this.letter.hashCode() + this.lat.hashCode() + this.lng.hashCode();
+        return this.letter.hashCode() + this.getPosition().hashCode();
     }
 
 

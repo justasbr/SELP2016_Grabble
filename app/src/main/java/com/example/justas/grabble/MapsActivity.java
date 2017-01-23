@@ -71,7 +71,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final double PICKUP_DISTANCE_IN_METERS = 10;
 
-    private static final int MARKERS_TO_SHOW = 100;
+    private static final int MARKERS_TO_SHOW = 50;
     public static final String SHOW_BEGINNER_POPUP = "show_beginner_popup";
 
     private boolean mPermissionDenied = false;
@@ -189,8 +189,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Log.d("DONT SHOW COLLECTED", "SIZE1 " + String.valueOf(mMarkerItems.size()));
                     Log.d("DONT SHOW COLLECTED", "SIZE2 " + collectedMarkers.size());
 
-                    mClusterManager.addItems(mMarkerItems);
-                    mClusterManager.cluster();
+                    if (mClusterManager != null) {
+                        mClusterManager.addItems(mMarkerItems);
+                        mClusterManager.cluster();
+                    }
                 }
 
                 @Override
@@ -270,7 +272,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(55.9533, -3.1883), 10.0f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(55.9533, -3.1883), 12.0f));
 
         mClusterManager = new ClusterManager<>(this, mMap);
         mClusterManager.setRenderer(new MarkerItemRenderer());
@@ -332,7 +334,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         updateUI();
 
 
-        if (mMarkerItems != null) {
+        if (mMarkerItems != null && mClusterManager != null) {
             ArrayList<MarkerItem> pickedUpItems = new ArrayList<>();
             for (MarkerItem markerItem : mMarkerItems) {
                 if (location.distanceTo(markerItem.getLocation()) <= PICKUP_DISTANCE_IN_METERS) {
@@ -340,24 +342,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
 
-            boolean itemsCollected = false;
-
             for (MarkerItem pickedUpItem : pickedUpItems) {
                 mMarkerItems.remove(pickedUpItem);
                 mClusterManager.removeItem(pickedUpItem);
                 storeMarker(pickedUpItem);
                 incrementLetterCount(pickedUpItem.getLabel());
-                itemsCollected = true;
             }
 
             boolean markerResetNeeded = forceMapRecluster || mShowOnlyClosest;
-            boolean reclusteringNeeded = markerResetNeeded || itemsCollected;
+            boolean reclusteringNeeded = markerResetNeeded || pickedUpItems.size() > 0;
             forceMapRecluster = false;
 
             if (markerResetNeeded) {
                 mClusterManager.clearItems();
                 if (mShowOnlyClosest) {
-                    PriorityQueue<MarkerItem> closestItems = new PriorityQueue<>(MARKERS_TO_SHOW, distanceToUserLocation);
+                    PriorityQueue<MarkerItem> closestItems =
+                            new PriorityQueue<>(MARKERS_TO_SHOW, distanceToUserLocation);
                     for (MarkerItem markerItem : mMarkerItems) {
                         closestItems.add(markerItem);
                         //Trim heap to contain MARKERS_TO_SHOW closest markers
