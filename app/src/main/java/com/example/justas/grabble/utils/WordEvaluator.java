@@ -1,7 +1,9 @@
-package com.example.justas.grabble;
+package com.example.justas.grabble.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.example.justas.grabble.R;
 
 import java.util.HashMap;
 import java.util.Map;

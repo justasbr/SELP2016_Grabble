@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.example.justas.grabble.data.CollectedMarkersContract.MarkerEntry;
 import com.example.justas.grabble.data.CollectedMarkersOpenHelper;
+import com.example.justas.grabble.utils.PermissionUtils;
+import com.example.justas.grabble.utils.Utility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -54,8 +56,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.justas.grabble.Utility.getDate;
-import static com.example.justas.grabble.Utility.getDateTime;
+import static com.example.justas.grabble.utils.Utility.getDate;
+import static com.example.justas.grabble.utils.Utility.getDateTime;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, LocationListener,
         ConnectionCallbacks, OnConnectionFailedListener, SharedPreferences.OnSharedPreferenceChangeListener {

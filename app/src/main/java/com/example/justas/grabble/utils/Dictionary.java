@@ -1,8 +1,9 @@
-package com.example.justas.grabble;
+package com.example.justas.grabble.utils;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.example.justas.grabble.R;
 import com.example.justas.grabble.helper.ScoredWord;
 
 import java.io.BufferedReader;

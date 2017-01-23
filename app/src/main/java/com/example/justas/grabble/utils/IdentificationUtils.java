@@ -1,4 +1,4 @@
-package com.example.justas.grabble;
+package com.example.justas.grabble.utils;
 
 import android.content.Context;
 import android.provider.Settings;

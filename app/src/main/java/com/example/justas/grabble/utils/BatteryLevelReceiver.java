@@ -1,4 +1,4 @@
-package com.example.justas.grabble;
+package com.example.justas.grabble.utils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+
+import com.example.justas.grabble.R;
 
 public class BatteryLevelReceiver extends BroadcastReceiver {
 

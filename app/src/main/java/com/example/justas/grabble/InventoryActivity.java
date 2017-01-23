@@ -24,9 +24,12 @@ import com.example.justas.grabble.data.SubmittedWordsOpenHelper;
 import com.example.justas.grabble.helper.Callbacks;
 import com.example.justas.grabble.helper.ScoredWord;
 import com.example.justas.grabble.helper.WordSubmission;
+import com.example.justas.grabble.utils.Dictionary;
+import com.example.justas.grabble.utils.IdentificationUtils;
+import com.example.justas.grabble.utils.WordEvaluator;
 
-import static com.example.justas.grabble.Utility.getDate;
-import static com.example.justas.grabble.Utility.getDateTime;
+import static com.example.justas.grabble.utils.Utility.getDate;
+import static com.example.justas.grabble.utils.Utility.getDateTime;
 
 public class InventoryActivity extends AppCompatActivity {
     private static final String SUGGESTIONS_REPLENISHED_DATE = "suggestion_replenished_on";

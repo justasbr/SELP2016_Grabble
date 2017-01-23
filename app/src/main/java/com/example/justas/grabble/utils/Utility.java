@@ -1,4 +1,4 @@
-package com.example.justas.grabble;
+package com.example.justas.grabble.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -15,26 +15,29 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.example.justas.grabble.MapsActivity;
+import com.example.justas.grabble.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-class Utility {
-    static String getDateTime() {
+public class Utility {
+    public static String getDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Date date = new Date();
         return dateFormat.format(date);
     }
 
-    static String getDate() {
+    public static String getDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "yyyy-MM-dd", Locale.getDefault());
         Date date = new Date();
         return dateFormat.format(date);
     }
 
-    static void confirmExitDialog(final Context context) {
+    public static void confirmExitDialog(final Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         int imageResource = android.R.drawable.ic_dialog_alert;
@@ -58,7 +61,7 @@ class Utility {
         alert.show();
     }
 
-    static void showFirstTimePlayerAlert(final Context context) {
+    public static void showFirstTimePlayerAlert(final Context context) {
         FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
 
         FirstTimePlayerDialogFragment alert = new FirstTimePlayerDialogFragment();

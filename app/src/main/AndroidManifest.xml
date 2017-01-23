@@ -60,7 +60,7 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme" />
 
-        <receiver android:name=".BatteryLevelReceiver">
+        <receiver android:name=".utils.BatteryLevelReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_LOW" />
             </intent-filter>
