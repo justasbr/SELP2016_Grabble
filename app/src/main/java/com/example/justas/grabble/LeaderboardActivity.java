@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.example.justas.grabble.helper.Leaderboard;
 import com.example.justas.grabble.helper.Player;
@@ -27,8 +26,7 @@ public class LeaderboardActivity extends AppCompatActivity implements ScoreFragm
     }
 
     @Override
-    public void onListFragmentInteraction(Player item) {
-        Log.d("LISTFRAGMENT", "interaction");
+    public void onListFragmentInteraction(Player player) {
     }
 
     public class SectionPagerAdapter extends FragmentPagerAdapter {

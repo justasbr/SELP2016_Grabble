@@ -146,4 +146,7 @@
     <string name="low_battery_warning">LOW BATTERY: Battery saver mode turned on</string>
     <string name="title_activity_history_stats"><![CDATA[History & Statistics]]></string>
     <string name="new_player_stats_summary">Track your stats and review your submitted words.</string>
+    <string name="leaderboard_position_title">Pos</string>
+    <string name="leaderboard_name_title">Name</string>
+    <string name="leaderboard_score_title">Score</string>
 </resources>
