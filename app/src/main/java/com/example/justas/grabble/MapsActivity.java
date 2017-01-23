@@ -134,33 +134,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         FloatingActionButton statsFab = (FloatingActionButton) findViewById(R.id.stats_button);
         FloatingActionButton settingsFab = (FloatingActionButton) findViewById(R.id.settings_button);
 
-        inventoryFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), InventoryActivity.class));
-            }
-        });
+        inventoryFab.setOnClickListener(start(InventoryActivity.class));
+        leaderboardFab.setOnClickListener(start(LeaderboardActivity.class));
+        statsFab.setOnClickListener(start(HistoryStatsActivity.class));
+        settingsFab.setOnClickListener(start(SettingsActivity.class));
+    }
 
-        leaderboardFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), LeaderboardActivity.class));
-            }
-        });
 
-        statsFab.setOnClickListener(new View.OnClickListener() {
+    private View.OnClickListener start(final Class cls){
+        return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), HistoryStatsActivity.class));
+                startActivity(new Intent(getApplicationContext(), cls));
             }
-        });
-
-        settingsFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-            }
-        });
+        };
     }
 
     private void initApplicationPrefs() {
