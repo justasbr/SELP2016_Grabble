@@ -43,8 +43,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-    private static String EXISTING_USER = "existing_user";
-    private static String USER_NAME = "user_name";
+    public static String EXISTING_USER = "existing_user";
+    public static String USER_NAME = "user_name";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.

@@ -29,7 +29,7 @@ public class Dictionary {
     }
 
     public boolean containsWord(String word) {
-        return wordMap.contains(word);
+        return word != null && wordMap.contains(word.toUpperCase());
     }
 
     private void parseDictionaryFromFile() {
