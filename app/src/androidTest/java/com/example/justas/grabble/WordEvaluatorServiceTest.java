@@ -49,6 +49,14 @@ public class WordEvaluatorServiceTest {
     }
 
     @Test
+    public void calculatesScoresCorrectly_givenExample() {
+        String WORD = "LOOKING";
+        int EXPECTED_SCORE = 70;
+
+        assertEquals(mWordEvaluator.wordScoreOf(WORD), EXPECTED_SCORE);
+    }
+
+    @Test
     public void caseInsensitive() {
         String word = "aLgeBrA";
 
